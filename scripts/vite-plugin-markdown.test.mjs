@@ -21,11 +21,6 @@ for (const file of readdirSync(CONTENT_DIR).filter((name) => name.endsWith('.md'
   })
 }
 
-test('the table of contents lists the level 2 headings', () => {
-  const { sfc } = renderMarkdown(readFileSync(`${CONTENT_DIR}writing-guidelines.md`, 'utf8'))
-  assert.match(sfc, /export const toc = \[.*\{"id":"voice-and-tone","title":"Voice and tone"\}/)
-})
-
 const rejected = {
   'raw HTML block': '<div onclick="alert(1)">x</div>',
   'inline raw HTML': 'a <b onclick="alert(1)">b</b>',

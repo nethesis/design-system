@@ -72,10 +72,15 @@
     @apply w-full border-collapse overflow-hidden rounded-md text-left;
   }
   th {
-    @apply border-b border-gray-300 bg-gray-100 px-3 py-2 font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-50;
+    @apply border-b border-gray-300 bg-gray-100 px-2 py-2 font-medium text-gray-900 sm:px-3 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-50;
   }
   td {
-    @apply border-b border-gray-200 px-3 py-2 align-top dark:border-gray-700;
+    @apply border-b border-gray-200 px-2 py-2 align-top sm:px-3 dark:border-gray-700;
+  }
+  /* on small screens long words break, instead of making the page wider */
+  th,
+  td {
+    overflow-wrap: anywhere;
   }
 
   /* Do / Don't tables: check and cross marks before each example */

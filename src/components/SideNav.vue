@@ -4,25 +4,44 @@
 -->
 
 <script setup lang="ts">
+import { nextTick, ref, watch } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import { HOME_PAGE, PAGE_GROUPS, RESOURCES, pageHref, type Page } from '../pages'
+import type { PageSection } from '../composables/usePageSections'
 
-defineProps<{ current: Page }>()
-const emit = defineEmits<{ navigate: [page: Page] }>()
+const props = defineProps<{ current: Page; sections: PageSection[]; activeSection: string }>()
+const emit = defineEmits<{ navigate: [page: Page, hash?: string] }>()
 
 // plain links, so that they can also be opened in a new tab
-function follow(event: MouseEvent, page: Page) {
+function follow(event: MouseEvent, page: Page, hash?: string) {
   if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
     return
   }
   event.preventDefault()
-  emit('navigate', page)
+  emit('navigate', page, hash)
 }
+
+// the sidebar can be taller than the screen: keep the current section in
+// view, scrolling only the sidebar
+const root = ref<HTMLElement>()
+watch(
+  () => props.activeSection,
+  async () => {
+    await nextTick()
+    const link = root.value?.querySelector<HTMLElement>('[aria-current="location"]')
+    if (!root.value || !link) return
+    const box = root.value.getBoundingClientRect()
+    const item = link.getBoundingClientRect()
+    if (item.top < box.top) root.value.scrollTop -= box.top - item.top + 16
+    else if (item.bottom > box.bottom) root.value.scrollTop += item.bottom - box.bottom + 16
+  }
+)
 </script>
 
 <template>
   <div
+    ref="root"
     class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-2 pb-6 dark:border-gray-700 dark:bg-gray-950"
   >
     <a
@@ -62,6 +81,29 @@ function follow(event: MouseEvent, page: Page) {
                 <FontAwesomeIcon :icon="page.icon" class="h-4 w-5 shrink-0" aria-hidden="true" />
                 {{ page.navLabel ?? page.title }}
               </a>
+              <!-- the sections of the current page -->
+              <ul
+                v-if="page === current && sections.length"
+                role="list"
+                :aria-label="`${page.navLabel ?? page.title} sections`"
+                class="mt-1 space-y-0.5"
+              >
+                <li v-for="section in sections" :key="section.id">
+                  <a
+                    :href="`${pageHref(page)}#${section.id}`"
+                    :aria-current="section.id === activeSection ? 'location' : undefined"
+                    :class="[
+                      section.id === activeSection
+                        ? 'font-medium text-primary-700 dark:text-primary-500'
+                        : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-50',
+                      'block rounded-md py-1 pr-3 pl-12 text-sm leading-6 transition-colors focus-visible:outline-2 focus-visible:outline-primary-700 dark:focus-visible:outline-primary-500'
+                    ]"
+                    @click="follow($event, page, `#${section.id}`)"
+                  >
+                    {{ section.title }}
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
         </li>

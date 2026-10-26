@@ -11,15 +11,18 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { NeInlineNotification } from '@nethesis/vue-components'
 import SideNav from './components/SideNav.vue'
 import TopBar from './components/TopBar.vue'
+import { usePageSections } from './composables/usePageSections'
 import { HOME_PAGE, findPage, groupOf, pageFromLocation, pageHref, type Page } from './pages'
 
 const currentPage = shallowRef(pageFromLocation())
 const sidebarOpen = ref(false)
-// changes when a link opens the current page again, so that the page starts
-// over from the new address, without the filters of the old one
+// changes when a link restarts the current page, so that it starts over from
+// the new address, without the filters of the old one
 const visit = ref(0)
 const pageTitle = ref<HTMLElement>()
 const notForNethServer8 = computed(() => !!groupOf(currentPage.value)?.notForNethServer8)
+// the sections of the current page, listed in the sidebar
+const { sections, activeSection } = usePageSections('main')
 
 // links made before the sidebar get the current address
 const initialUrl = new URL(window.location.href)
@@ -40,6 +43,21 @@ watch(
   { immediate: true }
 )
 
+// The menu of small screens gives the focus back to its button and unlocks
+// the page scroll when its animation ends: wait for it before moving
+let sidebarClosed: (() => void)[] = []
+function closeSidebar() {
+  sidebarOpen.value = false
+  return new Promise<void>((resolve) => sidebarClosed.push(resolve))
+}
+function onSidebarClosed() {
+  // the dialog restores the focus right after the animation
+  requestAnimationFrame(() => {
+    sidebarClosed.forEach((resolve) => resolve())
+    sidebarClosed = []
+  })
+}
+
 // pages loaded when opened render after a while: wait for an anchor for up
 // to two seconds
 async function waitForElement(id: string) {
@@ -51,12 +69,15 @@ async function waitForElement(id: string) {
   return null
 }
 
-// each page has its own query parameters and anchors
-async function navigate(page: Page, hash = '') {
-  sidebarOpen.value = false
+// each page has its own query parameters and anchors. Links from the content
+// and from the search restart the page when it is already open, so that the
+// target is not hidden by a filter; links to a section of the current page
+// in the sidebar don't.
+async function navigate(page: Page, hash = '', restart = false) {
+  if (sidebarOpen.value) await closeSidebar()
   if (page !== currentPage.value || hash) {
     window.history.pushState(null, '', `${pageHref(page)}${hash}`)
-    if (page === currentPage.value) visit.value++
+    if (page === currentPage.value && restart) visit.value++
     currentPage.value = page
   }
   await nextTick()
@@ -99,7 +120,7 @@ function followPageLink(event: MouseEvent) {
     return
   }
   event.preventDefault()
-  navigate(page, url.hash)
+  navigate(page, url.hash, true)
 }
 
 const onPopState = () => (currentPage.value = pageFromLocation())
@@ -121,7 +142,7 @@ onUnmounted(() => window.removeEventListener('popstate', onPopState))
   </a>
 
   <!-- sidebar for small screens -->
-  <TransitionRoot as="template" :show="sidebarOpen">
+  <TransitionRoot as="template" :show="sidebarOpen" @after-leave="onSidebarClosed">
     <Dialog class="relative z-50 lg:hidden" @close="sidebarOpen = false">
       <TransitionChild
         as="template"
@@ -151,7 +172,12 @@ onUnmounted(() => window.removeEventListener('popstate', onPopState))
                 <FontAwesomeIcon :icon="faXmark" class="size-6 text-white" aria-hidden="true" />
               </button>
             </div>
-            <SideNav :current="currentPage" @navigate="navigate" />
+            <SideNav
+              :current="currentPage"
+              :sections="sections"
+              :active-section="activeSection"
+              @navigate="navigate"
+            />
           </DialogPanel>
         </TransitionChild>
       </div>
@@ -160,11 +186,19 @@ onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
   <!-- sidebar for large screens -->
   <div class="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
-    <SideNav :current="currentPage" @navigate="navigate" />
+    <SideNav
+      :current="currentPage"
+      :sections="sections"
+      :active-section="activeSection"
+      @navigate="navigate"
+    />
   </div>
 
   <div class="lg:pl-72">
-    <TopBar @open-sidebar="sidebarOpen = true" @navigate="navigate" />
+    <TopBar
+      @open-sidebar="sidebarOpen = true"
+      @navigate="(page, hash) => navigate(page, hash, true)"
+    />
 
     <main id="main" class="px-4 py-10 sm:px-6 lg:px-8" @click="followPageLink">
       <div class="mx-auto max-w-7xl">

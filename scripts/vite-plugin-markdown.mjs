@@ -19,8 +19,6 @@
 // Tables whose header is "Do | Don't" get the do-dont class, styled with
 // check and cross marks.
 //
-// Each page also exports `toc`, the list of its level 2 headings.
-//
 // Imported with ?search (content/page.md?search), a page is instead a list of
 // its sections in plain text, for the search of the site.
 
@@ -88,7 +86,6 @@ const plainText = (tokens = []) =>
 export function renderMarkdown(markdown, filename = 'page.md') {
   const errors = []
   const ids = new Set()
-  const toc = []
 
   const marked = new Marked({
     async: false,
@@ -112,7 +109,6 @@ export function renderMarkdown(markdown, filename = 'page.md') {
         const id = slug(title)
         if (ids.has(id)) errors.push(`duplicate heading: ${title}`)
         ids.add(id)
-        if (depth === 2) toc.push({ id, title })
         return `<h${depth} id="${id}">${this.parser.parseInline(tokens)}</h${depth}>\n`
       },
       link({ href, title, tokens }) {
@@ -127,11 +123,7 @@ export function renderMarkdown(markdown, filename = 'page.md') {
   })
 
   const html = marked.parse(markdown)
-  const sfc = `<script>
-export const toc = ${JSON.stringify(toc).replace(/</g, '\\u003c')}
-</script>
-
-<template>
+  const sfc = `<template>
 <div v-pre>${html}</div>
 </template>
 `
