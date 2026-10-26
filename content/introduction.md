@@ -1,8 +1,15 @@
 # Nethesis Design System
 
-The Nethesis Design System applies to the user interfaces of all Nethesis products: NethServer 8,
-NethSecurity, NethVoice, NethService, Neth360 and My Nethesis. Its rules hold whatever technology
-a product is built with.
+The Nethesis Design System is made of three parts, to use together:
+
+- **This site**: the rules shared by all products, whatever technology they are built with.
+- **[vue-components Storybook](https://nethesis.github.io/vue-components/)**: the Vue components
+  and patterns of `@nethesis/vue-components`, with their props and live examples.
+- **[NDS Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS)**: the designs and
+  the component library, open to the members of the Nethesis Figma team.
+
+It applies to the user interfaces of NethSecurity, NethVoice, NethService, Neth360 and My Nethesis,
+and in part to [NethServer 8](#nethserver-8).
 
 ## What you find here
 
@@ -14,9 +21,13 @@ a product is built with.
   [iconography](?page=iconography), [spacing and border](?page=spacing-and-border),
   [elevation and shadow](?page=elevation-and-shadow).
 
-## Other sources
+## NethServer 8
 
-- [vue-components Storybook](https://nethesis.github.io/vue-components/): the components and
-  patterns of `@nethesis/vue-components`, with live examples.
-- [NDS Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS): the Nethesis Design
-  System for designers, open to the members of the Nethesis Figma team.
+NethServer 8 uses the Carbon Design System, not the Nethesis one: only the
+[writing guidelines](?page=writing-guidelines) and the [glossary](?page=glossary) apply to it. The
+foundations and the vue-components library do not. For its components and visual style, see:
+
+- [Carbon Design System v10](https://v10.carbondesignsystem.com/): the design system.
+- [ns8-ui-lib Storybook](https://nethserver.github.io/ns8-ui-lib/): the NethServer 8 components.
+- [Carbon Components Vue Storybook](https://vue.carbondesignsystem.com/vue2/): the Carbon
+  components for Vue 2.

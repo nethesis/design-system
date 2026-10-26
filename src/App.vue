@@ -4,13 +4,14 @@
 -->
 
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { NeInlineNotification } from '@nethesis/vue-components'
 import SideNav from './components/SideNav.vue'
 import TopBar from './components/TopBar.vue'
-import { HOME_PAGE, findPage, pageFromLocation, pageHref, type Page } from './pages'
+import { HOME_PAGE, findPage, groupOf, pageFromLocation, pageHref, type Page } from './pages'
 
 const currentPage = shallowRef(pageFromLocation())
 const sidebarOpen = ref(false)
@@ -18,6 +19,7 @@ const sidebarOpen = ref(false)
 // over from the new address, without the filters of the old one
 const visit = ref(0)
 const pageTitle = ref<HTMLElement>()
+const notForNethServer8 = computed(() => !!groupOf(currentPage.value)?.notForNethServer8)
 
 // links made before the sidebar get the current address
 const initialUrl = new URL(window.location.href)
@@ -177,6 +179,19 @@ onUnmounted(() => window.removeEventListener('popstate', onPopState))
           <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-400">
             {{ currentPage.description }}
           </p>
+          <NeInlineNotification
+            v-if="notForNethServer8"
+            kind="info"
+            title="Not for NethServer 8"
+            class="mt-6 max-w-3xl"
+          >
+            <template #description>
+              NethServer 8 uses the Carbon Design System instead: see the
+              <a href="?page=introduction#nethserver-8" class="font-medium underline"
+                >introduction</a
+              >.
+            </template>
+          </NeInlineNotification>
         </header>
         <component :is="currentPage.component" :key="`${currentPage.id}-${visit}`" />
       </div>

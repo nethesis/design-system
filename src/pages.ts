@@ -33,6 +33,8 @@ export type Page = {
 
 export type PageGroup = {
   label?: string
+  // the pages do not apply to NethServer 8, which uses the Carbon Design System
+  notForNethServer8?: boolean
   pages: Page[]
 }
 
@@ -43,7 +45,7 @@ export const PAGE_GROUPS: PageGroup[] = [
         id: 'introduction',
         title: 'Nethesis Design System',
         navLabel: 'Introduction',
-        description: 'Rules shared by the user interfaces of all Nethesis products.',
+        description: 'Rules, components and designs for the user interfaces of Nethesis products.',
         icon: faHouse,
         component: IntroductionView
       }
@@ -73,6 +75,7 @@ export const PAGE_GROUPS: PageGroup[] = [
   },
   {
     label: 'Foundations',
+    notForNethServer8: true,
     pages: [
       {
         id: 'colors',
@@ -133,6 +136,8 @@ export const PAGES = PAGE_GROUPS.flatMap((group) => group.pages)
 export const HOME_PAGE = PAGES[0]
 
 export const findPage = (id: string | null) => PAGES.find((page) => page.id === id)
+
+export const groupOf = (page: Page) => PAGE_GROUPS.find((group) => group.pages.includes(page))
 
 // the address of a page, relative to the site
 export const pageHref = (page: Page) =>
