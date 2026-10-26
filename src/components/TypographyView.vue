@@ -4,7 +4,7 @@
 -->
 
 <script setup lang="ts">
-import { TEXT_SIZES, TEXT_STYLE_GROUPS } from '../foundations'
+import { FONT_WEIGHTS, TEXT_SIZES, TEXT_STYLE_GROUPS } from '../foundations'
 
 const SAMPLE = 'The quick brown fox jumps over the lazy dog'
 
@@ -35,10 +35,7 @@ const inlineStyle = (size: number, lineHeight: number) => ({
     </p>
     <div class="grid max-w-3xl gap-4 sm:grid-cols-2">
       <div
-        v-for="weight in [
-          { name: 'Regular', value: 400, className: 'font-normal' },
-          { name: 'Medium', value: 500, className: 'font-medium' }
-        ]"
+        v-for="weight in FONT_WEIGHTS"
         :key="weight.value"
         class="rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-950"
       >

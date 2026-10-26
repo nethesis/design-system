@@ -12,6 +12,17 @@ const rem = (px: number) => `${px / 16} rem`
 
 // typography
 
+// Poppins: only Regular and Medium, both loaded (the default import of
+// @fontsource/poppins has only Regular, and the browser fakes Medium)
+export const TYPEFACE = {
+  family: 'Poppins',
+  imports: ['@fontsource/poppins/400.css', '@fontsource/poppins/500.css']
+}
+export const FONT_WEIGHTS = [
+  { name: 'Regular', value: 400, className: 'font-normal', use: 'Body text' },
+  { name: 'Medium', value: 500, className: 'font-medium', use: 'Headings, labels and buttons' }
+]
+
 export type TextSize = {
   name: string
   className: string | null
@@ -175,6 +186,30 @@ export const TEXT_STYLE_GROUPS: { title: string; styles: TextStyle[] }[] = [
       }
     ]
   }
+]
+
+// iconography
+
+// the packages of the icons, as in package.json
+export const ICON_PACKAGES = [
+  { name: '@fortawesome/free-solid-svg-icons', version: '^6.7.2' },
+  { name: '@nethesis/nethesis-solid-svg-icons', version: 'github:nethesis/Font-Awesome#ns-solid' },
+  { name: '@nethesis/nethesis-light-svg-icons', version: 'github:nethesis/Font-Awesome#ns-light' },
+  { name: '@nethesis/nethesis-brands-svg-icons', version: 'github:nethesis/Font-Awesome#ns-brands' }
+]
+
+// sizes and their use, from the Iconography page of the NDS Figma file
+export const ICON_SIZES = [
+  { px: 12, className: 'size-3', use: 'Service icons, such as the check circle of a selection' },
+  {
+    px: 16,
+    className: 'size-4',
+    use: 'The most used size: buttons, badges, tooltips, text inputs, comboboxes, dropdowns, tables'
+  },
+  { px: 20, className: 'size-5', use: 'Rounded icon' },
+  { px: 24, className: 'size-6', use: 'Cards, sidebar and top bar' },
+  { px: 32, className: 'size-8', use: 'File input' },
+  { px: 48, className: 'size-12', use: 'Empty state' }
 ]
 
 // spacing and border

@@ -33,7 +33,25 @@ and the glossary apply to it.
 | `data/colors.json` | Color tokens exported from the NDS Figma file (do not edit): see "Colors" below |
 | `scripts/figma/export-colors.js`, `scripts/import-colors.mjs` | Export the color variables from Figma, then validate them and write `data/colors.json` |
 | `src/foundations.ts` | Values of the foundations pages (typography, spacing and border, elevation and shadow), copied from the NDS Figma file: update them when Figma changes |
+| `scripts/vite-plugin-sources.ts` | Publishes the content as plain files for coding agents: see "Files for coding agents" below |
 | `src/` | The web site (Vue, `@nethesis/vue-components`), published on GitHub Pages |
+
+## Files for coding agents
+
+The pages of the site are built in the browser, so fetching them returns no content. The build
+also publishes the content as plain files, next to the site, generated from the same sources as
+the pages:
+
+| File | Content |
+| --- | --- |
+| [`llms.txt`](https://nethesis.github.io/design-system/llms.txt) | Index of the files below |
+| [`writing-guidelines.md`](https://nethesis.github.io/design-system/writing-guidelines.md) | The writing guidelines |
+| [`glossary.json`](https://nethesis.github.io/design-system/glossary.json) | The glossary |
+| [`colors.json`](https://nethesis.github.io/design-system/colors.json) | The color tokens, with their Tailwind CSS classes |
+| [`foundations.json`](https://nethesis.github.io/design-system/foundations.json) | Typography, iconography, spacing, border, focus ring, elevation and shadow |
+| [`introduction.md`](https://nethesis.github.io/design-system/introduction.md) | The introduction |
+
+The dev server serves them too, for example http://localhost:5179/llms.txt.
 
 ## Workflow
 

@@ -1,7 +1,7 @@
 //  Copyright (C) 2026 Nethesis S.r.l.
 //  SPDX-License-Identifier: GPL-3.0-or-later
 
-import colors from '../data/colors.json'
+import colors from '../data/colors.json' with { type: 'json' }
 
 // Color tokens of the NDS Figma file, exported to data/colors.json by
 // scripts/figma/export-colors.js and scripts/import-colors.mjs.

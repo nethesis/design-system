@@ -10,20 +10,7 @@ import { faShieldHalved } from '@fortawesome/free-solid-svg-icons'
 import { fas } from '@nethesis/nethesis-solid-svg-icons'
 import { fal } from '@nethesis/nethesis-light-svg-icons'
 import { fab } from '@nethesis/nethesis-brands-svg-icons'
-
-// sizes and their use, from the Iconography page of the NDS Figma file
-const SIZES = [
-  { px: 12, className: 'size-3', use: 'Service icons, such as the check circle of a selection' },
-  {
-    px: 16,
-    className: 'size-4',
-    use: 'The most used size: buttons, badges, tooltips, text inputs, comboboxes, dropdowns, tables'
-  },
-  { px: 20, className: 'size-5', use: 'Rounded icon' },
-  { px: 24, className: 'size-6', use: 'Cards, sidebar and top bar' },
-  { px: 32, className: 'size-8', use: 'File input' },
-  { px: 48, className: 'size-12', use: 'Empty state' }
-]
+import { ICON_PACKAGES, ICON_SIZES } from '../foundations'
 
 const icons = (pack: IconPack) =>
   Object.entries(pack)
@@ -51,10 +38,7 @@ const CUSTOM_ICONS = [
   }
 ]
 
-const PACKAGES = `"@fortawesome/free-solid-svg-icons": "^6.7.2",
-"@nethesis/nethesis-solid-svg-icons": "github:nethesis/Font-Awesome#ns-solid",
-"@nethesis/nethesis-light-svg-icons": "github:nethesis/Font-Awesome#ns-light",
-"@nethesis/nethesis-brands-svg-icons": "github:nethesis/Font-Awesome#ns-brands"`
+const PACKAGES = ICON_PACKAGES.map(({ name, version }) => `"${name}": "${version}"`).join(',\n')
 </script>
 
 <template>
@@ -131,7 +115,7 @@ const PACKAGES = `"@fortawesome/free-solid-svg-icons": "^6.7.2",
           </tr>
         </thead>
         <tbody>
-          <tr v-for="size in SIZES" :key="size.px">
+          <tr v-for="size in ICON_SIZES" :key="size.px">
             <td class="whitespace-nowrap">{{ size.px }} px</td>
             <td>
               <code>{{ size.className }}</code>
