@@ -21,6 +21,7 @@
 //
 // Each page also exports `toc`, the list of its level 2 headings.
 
+import { basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Marked, Renderer } from 'marked'
 import { parse } from 'vue/compiler-sfc'
@@ -28,13 +29,10 @@ import { slug } from './slug.mjs'
 
 export const CONTENT_DIR = fileURLToPath(new URL('../content/', import.meta.url))
 
-// the markdown files inside content/ and content/components/
+// the markdown files directly inside content/
 export const CONTENT_PAGE = new RegExp(
-  `^${CONTENT_DIR.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(components/)?[^/]+\\.md$`
+  `^${CONTENT_DIR.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[^/]+\\.md$`
 )
-
-// table headers that get check and cross marks
-const DO_DONT_HEADERS = ["Do|Don't", 'When to use|When not to use']
 
 // web pages, anchors, paths and other pages of the site (?page=glossary)
 const SAFE_HREF = /^(https?:\/\/|#|\.{0,2}\/|[a-z0-9-]+(\/|$)|\?page=[a-z0-9-]+(#[a-z0-9-]+)?$)/i
@@ -83,14 +81,10 @@ const escape = (text) =>
 const plainText = (tokens = []) =>
   tokens.map((token) => (token.tokens ? plainText(token.tokens) : token.text)).join('')
 
-// With omitSummary, the first paragraph is not rendered: the page shows it in
-// its header, from the exported summary.
-export function renderMarkdown(markdown, filename = 'page.md', { omitSummary = false } = {}) {
+export function renderMarkdown(markdown, filename = 'page.md') {
   const errors = []
   const ids = new Set()
   const toc = []
-  let title = ''
-  let summary = null
 
   const marked = new Marked({
     async: false,
@@ -107,24 +101,14 @@ export function renderMarkdown(markdown, filename = 'page.md', { omitSummary = f
       table(token) {
         const html = Renderer.prototype.table.call(this, token)
         const header = token.header.map((cell) => plainText(cell.tokens))
-        return DO_DONT_HEADERS.includes(header.join('|'))
-          ? html.replace(/^<table>/, '<table class="do-dont">')
-          : html
-      },
-      paragraph(token) {
-        if (summary === null) {
-          summary = plainText(token.tokens)
-          if (omitSummary) return ''
-        }
-        return Renderer.prototype.paragraph.call(this, token)
+        return header.join('|') === "Do|Don't" ? html.replace(/^<table>/, '<table class="do-dont">') : html
       },
       heading({ tokens, depth }) {
-        const text = plainText(tokens)
-        const id = slug(text)
-        if (ids.has(id)) errors.push(`duplicate heading: ${text}`)
+        const title = plainText(tokens)
+        const id = slug(title)
+        if (ids.has(id)) errors.push(`duplicate heading: ${title}`)
         ids.add(id)
-        if (depth === 1 && !title) title = text
-        if (depth === 2) toc.push({ id, title: text })
+        if (depth === 2) toc.push({ id, title })
         return `<h${depth} id="${id}">${this.parser.parseInline(tokens)}</h${depth}>\n`
       },
       link({ href, title, tokens }) {
@@ -139,11 +123,8 @@ export function renderMarkdown(markdown, filename = 'page.md', { omitSummary = f
   })
 
   const html = marked.parse(markdown)
-  const json = (value) => JSON.stringify(value).replace(/</g, '\\u003c')
   const sfc = `<script>
-export const title = ${json(title)}
-export const summary = ${json(summary ?? '')}
-export const toc = ${json(toc)}
+export const toc = ${JSON.stringify(toc).replace(/</g, '\\u003c')}
 </script>
 
 <template>
@@ -183,11 +164,8 @@ export default function markdownPages() {
     enforce: 'pre',
     transform(markdown, id) {
       if (!CONTENT_PAGE.test(id)) return
-      const file = id.slice(CONTENT_DIR.length)
-      const { sfc, errors } = renderMarkdown(markdown, id, {
-        omitSummary: file.startsWith('components/')
-      })
-      if (errors.length) this.error(`content/${file}:\n${errors.join('\n')}`)
+      const { sfc, errors } = renderMarkdown(markdown, id)
+      if (errors.length) this.error(`content/${basename(id)}:\n${errors.join('\n')}`)
       return { code: sfc, map: null }
     }
   }

@@ -4,24 +4,12 @@
 -->
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import { HOME_PAGE, PAGE_GROUPS, RESOURCES, pageHref, type Page } from '../pages'
 
-const props = defineProps<{ current: Page }>()
+defineProps<{ current: Page }>()
 const emit = defineEmits<{ navigate: [page: Page] }>()
-
-// the sidebar is long: keep the current page visible in it
-const root = ref<HTMLElement>()
-watch(
-  () => props.current,
-  async () => {
-    await nextTick()
-    root.value?.querySelector('[aria-current="page"]')?.scrollIntoView({ block: 'nearest' })
-  },
-  { immediate: true }
-)
 
 // plain links, so that they can also be opened in a new tab
 function follow(event: MouseEvent, page: Page) {
@@ -35,7 +23,6 @@ function follow(event: MouseEvent, page: Page) {
 
 <template>
   <div
-    ref="root"
     class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-2 pb-6 dark:border-gray-700 dark:bg-gray-950"
   >
     <a
@@ -68,18 +55,11 @@ function follow(event: MouseEvent, page: Page) {
                   page === current
                     ? 'border-primary-700 bg-gray-100 text-gray-900 dark:border-primary-500 dark:bg-gray-800 dark:text-gray-50'
                     : 'border-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50',
-                  // pages without an icon align their label with the labels of the others
-                  page.icon ? 'px-3 py-2' : 'py-1.5 pr-3 pl-11',
-                  'flex items-center gap-x-3 rounded-md border-l-4 text-sm leading-6 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-primary-700 dark:focus-visible:outline-primary-500'
+                  'flex items-center gap-x-3 rounded-md border-l-4 px-3 py-2 text-sm leading-6 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-primary-700 dark:focus-visible:outline-primary-500'
                 ]"
                 @click="follow($event, page)"
               >
-                <FontAwesomeIcon
-                  v-if="page.icon"
-                  :icon="page.icon"
-                  class="h-4 w-5 shrink-0"
-                  aria-hidden="true"
-                />
+                <FontAwesomeIcon :icon="page.icon" class="h-4 w-5 shrink-0" aria-hidden="true" />
                 {{ page.navLabel ?? page.title }}
               </a>
             </li>

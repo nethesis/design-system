@@ -14,34 +14,12 @@ const compile = (sfc) => {
   return compileTemplate({ source: descriptor.template.content, filename: 'x.vue', id: 'x' }).code
 }
 
-const contentFiles = [
-  ...readdirSync(CONTENT_DIR).filter((name) => name.endsWith('.md')),
-  ...readdirSync(`${CONTENT_DIR}components`).map((name) => `components/${name}`)
-]
-
-for (const file of contentFiles) {
+for (const file of readdirSync(CONTENT_DIR).filter((name) => name.endsWith('.md'))) {
   test(`content/${file} is accepted`, () => {
     const { errors } = renderMarkdown(readFileSync(`${CONTENT_DIR}${file}`, 'utf8'))
     assert.deepEqual(errors, [])
   })
 }
-
-test('component pages have a title, a summary and a code line', () => {
-  for (const file of contentFiles.filter((name) => name.startsWith('components/'))) {
-    const markdown = readFileSync(`${CONTENT_DIR}${file}`, 'utf8')
-    const { sfc } = renderMarkdown(markdown, file, { omitSummary: true })
-    assert.match(sfc, /export const title = "[^"]+"/, file)
-    assert.match(sfc, /export const summary = "[^"]+\."/, file)
-    assert.match(markdown, /^Code: .*\[Figma\]\(https:\/\/www\.figma\.com\//m, file)
-  }
-})
-
-test('the summary can be left out of the page', () => {
-  const { sfc } = renderMarkdown('# T\n\nFirst.\n\nSecond.', 'x.md', { omitSummary: true })
-  assert.match(sfc, /export const summary = "First\."/)
-  assert.doesNotMatch(sfc, /<p>First\.<\/p>/)
-  assert.match(sfc, /<p>Second\.<\/p>/)
-})
 
 test('the table of contents lists the level 2 headings', () => {
   const { sfc } = renderMarkdown(readFileSync(`${CONTENT_DIR}writing-guidelines.md`, 'utf8'))

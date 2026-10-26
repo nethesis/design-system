@@ -2,10 +2,10 @@
 
 Rules shared by the user interfaces of all Nethesis products (NethServer 8, NethSecurity,
 NethVoice, NethService, Neth360 and My Nethesis), whatever technology they are built with:
-writing guidelines, the glossary of terms with their Italian translations, the visual foundations
-and the guidance for each component.
+writing guidelines, the glossary of terms with their Italian translations and the visual
+foundations.
 
-The Vue implementation of the components, with their props and live examples, is in the
+The components, with their props and live examples, are in the
 [vue-components Storybook](https://nethesis.github.io/vue-components/). The designs are in the
 [NDS Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS).
 
@@ -17,7 +17,6 @@ Read it at https://nethesis.github.io/design-system/.
 | --- | --- |
 | `glossary.yaml` | The glossary: single source of truth, edited through pull requests. The comment at the top describes the fields |
 | `content/*.md` | The text pages (introduction, writing guidelines): plain markdown, no HTML or images. Tables with a "Do \| Don't" header are shown with check and cross marks. Link other pages with `?page=<id>`, for example `[glossary](?page=glossary)` |
-| `content/components/*.md` | One page per component, in the Components group: the first paragraph is the summary shown in the header and in the overview, the second is the `Code:` line with the Storybook and Figma links |
 | `glossary/it.tbx` | Italian glossary for Weblate, generated from `glossary.yaml` (do not edit) |
 | `scripts/build-data.mjs` | Validates `glossary.yaml` and generates the TBX files and the page data |
 | `scripts/vite-plugin-markdown.mjs` | Compiles each `content/*.md` into a Vue component, rejecting raw HTML and unsafe links (tests in `vite-plugin-markdown.test.mjs`) |

@@ -48,8 +48,7 @@ that it agrees with this guide. Remove an item once it is done.
 - [ ] Guideline frames still with the template text: **Card**, **Side drawer**, **Table**,
   **Tabs**, **Toggle**, **Topbar**, **Text area**, **Notification button**, **Main sidebar**,
   **Vertical navigation**, **Phone island**, and most of **Combobox**, **Dropdown** and **Radio
-  selection**. Fill them in or remove them; the site lists them as not documented yet.
-
+  selection**. Fill them in or remove them.
 - [ ] **Inline notification** page: the example "Please sign in again" becomes "Sign in again." (no
   "please" for routine instructions).
 - [ ] **Toast Notification** page, *When not to use*: one cell has placeholder text (Nullam
@@ -59,7 +58,7 @@ that it agrees with this guide. Remove an item once it is done.
 - [ ] **Empty state** page, *Behavior* and *Content*: the Do and Don't descriptions are still the
   template text ("This would be the description…").
 - [ ] **Checkbox** and **Combobox** pages: "less than 6 options" and "more than 6 options" leave
-  out exactly 6. The site says "fewer than six: checkboxes; more: combobox".
+  out exactly 6.
 
 ## Questions for the designer
 

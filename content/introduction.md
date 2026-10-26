@@ -13,7 +13,6 @@ a product is built with.
 - Foundations: [colors](?page=colors), [typography](?page=typography),
   [iconography](?page=iconography), [spacing and border](?page=spacing-and-border),
   [elevation and shadow](?page=elevation-and-shadow).
-- [Components](?page=components): when and how to use each component, its anatomy and behavior.
 
 ## Other sources
 

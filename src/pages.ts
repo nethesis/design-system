@@ -1,11 +1,10 @@
 //  Copyright (C) 2026 Nethesis S.r.l.
 //  SPDX-License-Identifier: GPL-3.0-or-later
 
-import { defineAsyncComponent, h, type Component } from 'vue'
+import { defineAsyncComponent, type Component } from 'vue'
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import {
   faBook,
-  faCubes,
   faFont,
   faHouse,
   faIcons,
@@ -17,7 +16,6 @@ import {
 import IntroductionView from './components/IntroductionView.vue'
 import GuidelinesView from './components/GuidelinesView.vue'
 import GlossaryView from './components/GlossaryView.vue'
-import ComponentsView from './components/ComponentsView.vue'
 
 // The pages of the site, grouped as in the sidebar. The foundations pages
 // are loaded when opened, to keep the first download small. The page id is the value
@@ -29,8 +27,7 @@ export type Page = {
   // the sidebar label, when shorter than the title
   navLabel?: string
   description: string
-  // pages in long groups have no icon
-  icon?: IconDefinition
+  icon: IconDefinition
   component: Component
 }
 
@@ -38,19 +35,6 @@ export type PageGroup = {
   label?: string
   pages: Page[]
 }
-
-// one page for each content/components/*.md, in alphabetical order
-type MarkdownPage = { default: Component; title: string; summary: string }
-const componentFiles = import.meta.glob<MarkdownPage>('../content/components/*.md', { eager: true })
-
-export const COMPONENT_PAGES: Page[] = Object.entries(componentFiles)
-  .map(([path, page]) => ({
-    id: path.split('/').pop()!.replace(/\.md$/, ''),
-    title: page.title,
-    description: page.summary,
-    component: () => h('article', { class: 'markdown' }, h(page.default))
-  }))
-  .sort((a, b) => a.title.localeCompare(b.title))
 
 export const PAGE_GROUPS: PageGroup[] = [
   {
@@ -127,21 +111,6 @@ export const PAGE_GROUPS: PageGroup[] = [
         icon: faLayerGroup,
         component: defineAsyncComponent(() => import('./components/ElevationView.vue'))
       }
-    ]
-  },
-  {
-    label: 'Components',
-    pages: [
-      {
-        id: 'components',
-        title: 'Components',
-        navLabel: 'Overview',
-        description:
-          'How and when to use the components of Nethesis user interfaces, from the NDS Figma file. Each page links to the Vue component in Storybook, with its props and live examples.',
-        icon: faCubes,
-        component: ComponentsView
-      },
-      ...COMPONENT_PAGES
     ]
   }
 ]
