@@ -31,7 +31,7 @@ const iconButtonClasses =
     </button>
     <div class="h-6 w-px bg-gray-200 lg:hidden dark:bg-gray-700" aria-hidden="true" />
     <span class="flex-1 truncate text-sm font-medium text-gray-900 lg:invisible dark:text-gray-50">
-      Nethesis UX guidelines
+      Nethesis Design System
     </span>
 
     <nav aria-label="Other sources" class="hidden items-center gap-x-6 sm:flex">

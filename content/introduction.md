@@ -1,8 +1,8 @@
-# Nethesis UX guidelines
+# Nethesis Design System
 
-These guidelines apply to the user interfaces of all Nethesis products: NethServer 8,
-NethSecurity, NethVoice, NethService, Neth360 and My Nethesis, whatever technology they are built
-with.
+The Nethesis Design System applies to the user interfaces of all Nethesis products: NethServer 8,
+NethSecurity, NethVoice, NethService, Neth360 and My Nethesis. Its rules hold whatever technology
+a product is built with.
 
 ## What you find here
 
@@ -10,6 +10,10 @@ with.
   tone to the text of buttons, forms, empty states, modals and notifications.
 - [Glossary](?page=glossary): the approved terms, with their Italian translations and the terms to
   avoid. Weblate uses it when translating Nethesis products.
+- Foundations: [colors](?page=colors), [typography](?page=typography),
+  [iconography](?page=iconography), [spacing and border](?page=spacing-and-border),
+  [elevation and shadow](?page=elevation-and-shadow).
+- [Components](?page=components): when and how to use each component, its anatomy and behavior.
 
 ## Other sources
 

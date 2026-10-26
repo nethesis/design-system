@@ -72,4 +72,4 @@ that it agrees with this guide. Remove an item once it is done.
 
 - [ ] Replace the writing rules in Figma (Writing guidelines page and the writing sections of the
   component pages) with a short link to the corresponding section of
-  https://nethserver.github.io/ux-guidelines/, so there is a single source.
+  https://nethesis.github.io/design-system/, so there is a single source.

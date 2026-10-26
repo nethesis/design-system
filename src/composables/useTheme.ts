@@ -8,7 +8,7 @@ import { computed, ref, watchEffect } from 'vue'
 
 type Theme = 'light' | 'dark'
 
-const STORAGE_KEY = 'ux-guidelines:theme'
+const STORAGE_KEY = 'design-system:theme'
 const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
 function savedTheme(): Theme | null {

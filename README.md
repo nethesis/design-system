@@ -1,13 +1,15 @@
-# Nethesis UX guidelines
+# Nethesis Design System
 
 Rules shared by the user interfaces of all Nethesis products (NethServer 8, NethSecurity,
 NethVoice, NethService, Neth360 and My Nethesis), whatever technology they are built with:
-writing guidelines, and the glossary of terms with their Italian translations.
+writing guidelines, the glossary of terms with their Italian translations, the visual foundations
+and the guidance for each component.
 
-Components and their usage are documented in the
-[vue-components Storybook](https://nethesis.github.io/vue-components/).
+The Vue implementation of the components, with their props and live examples, is in the
+[vue-components Storybook](https://nethesis.github.io/vue-components/). The designs are in the
+[NDS Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS).
 
-Read it at https://nethserver.github.io/ux-guidelines/.
+Read it at https://nethesis.github.io/design-system/.
 
 ## Files
 

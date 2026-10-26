@@ -57,7 +57,7 @@ export const PAGE_GROUPS: PageGroup[] = [
     pages: [
       {
         id: 'introduction',
-        title: 'Nethesis UX guidelines',
+        title: 'Nethesis Design System',
         navLabel: 'Introduction',
         description: 'Rules shared by the user interfaces of all Nethesis products.',
         icon: faHouse,

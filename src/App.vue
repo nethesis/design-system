@@ -30,7 +30,7 @@ if (
 watch(
   currentPage,
   (page) => {
-    document.title = page === HOME_PAGE ? page.title : `${page.title} · Nethesis UX guidelines`
+    document.title = page === HOME_PAGE ? page.title : `${page.title} · Nethesis Design System`
   },
   { immediate: true }
 )

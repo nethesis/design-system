@@ -43,7 +43,7 @@ function follow(event: MouseEvent, page: Page) {
       class="flex h-16 shrink-0 items-center rounded-md px-4 text-sm font-medium text-gray-900 focus-visible:outline-2 focus-visible:outline-primary-700 dark:text-gray-50 dark:focus-visible:outline-primary-500"
       @click="follow($event, HOME_PAGE)"
     >
-      Nethesis UX guidelines
+      Nethesis Design System
     </a>
     <nav aria-label="Pages" class="flex flex-1 flex-col">
       <ul role="list" class="flex flex-col gap-y-6">
@@ -117,11 +117,11 @@ function follow(event: MouseEvent, page: Page) {
     <p class="mt-auto px-4 text-xs leading-5 text-gray-500 dark:text-gray-400">
       To propose a change, open a pull request on
       <a
-        href="https://github.com/NethServer/ux-guidelines"
+        href="https://github.com/nethesis/design-system"
         target="_blank"
         rel="noopener noreferrer"
         class="underline hover:text-gray-900 dark:hover:text-gray-50"
-        >NethServer/ux-guidelines</a
+        >nethesis/design-system</a
       >.
     </p>
   </div>

@@ -5,7 +5,7 @@ import markdownPages, { CONTENT_PAGE } from './scripts/vite-plugin-markdown.mjs'
 import glossaryWatch from './scripts/vite-plugin-glossary-watch.mjs'
 
 export default defineConfig({
-  // relative base: the site is served from https://<org>.github.io/ux-guidelines/
+  // relative base: the site is served from https://<org>.github.io/design-system/
   base: './',
   plugins: [
     // content/*.md become Vue components, see scripts/vite-plugin-markdown.mjs
