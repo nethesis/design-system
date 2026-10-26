@@ -19,9 +19,10 @@ Read it at https://nethesis.github.io/design-system/.
 | `content/*.md` | The text pages (introduction, writing guidelines): plain markdown, no HTML or images. Tables with a "Do \| Don't" header are shown with check and cross marks. Link other pages with `?page=<id>`, for example `[glossary](?page=glossary)` |
 | `glossary/it.tbx` | Italian glossary for Weblate, generated from `glossary.yaml` (do not edit) |
 | `scripts/build-data.mjs` | Validates `glossary.yaml` and generates the TBX files and the page data |
-| `scripts/vite-plugin-markdown.mjs` | Compiles each `content/*.md` into a Vue component, rejecting raw HTML and unsafe links (tests in `vite-plugin-markdown.test.mjs`) |
+| `scripts/vite-plugin-markdown.mjs` | Compiles each `content/*.md` into a Vue component, rejecting raw HTML and unsafe links, and gives the search the text of each section (tests in `vite-plugin-markdown.test.mjs`) |
 | `scripts/vite-plugin-glossary-watch.mjs` | Dev server only: reruns `build-data.mjs` when `glossary.yaml` is saved |
 | `src/pages.ts` | The pages of the site and their sidebar groups |
+| `src/search.ts` | The search in the top bar: pages, sections, glossary terms, color tokens, text styles and custom icons. Loaded the first time the search gets the focus. Headings of the Vue pages are found only when they have a fixed `id` and text |
 | `data/colors.json` | Color tokens exported from the NDS Figma file (do not edit): see "Colors" below |
 | `scripts/figma/export-colors.js`, `scripts/import-colors.mjs` | Export the color variables from Figma, then validate them and write `data/colors.json` |
 | `src/foundations.ts` | Values of the foundations pages (typography, spacing and border, elevation and shadow), copied from the NDS Figma file: update them when Figma changes |

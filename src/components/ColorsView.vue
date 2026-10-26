@@ -10,12 +10,14 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import {
   EXPORTED_AT,
   GROUPS,
+  groupAnchor,
   SEMANTIC,
   palettes,
   tailwindClasses,
   tailwindColor,
   type ColorValue
 } from '../colors'
+import { tokenAnchor } from '../text'
 
 const textFilter = ref('')
 const query = computed(() => textFilter.value.trim().toLowerCase())
@@ -86,7 +88,7 @@ const label = (value: ColorValue) => value.ref ?? value.hex
     </NeEmptyState>
 
     <template v-for="group in groups" :key="group.name">
-      <h3 :id="`tokens-${group.name.toLowerCase().replace(/ /g, '-')}`">{{ group.name }}</h3>
+      <h3 :id="groupAnchor(group.name)">{{ group.name }}</h3>
       <p>{{ group.description }}</p>
       <div class="overflow-x-auto">
         <table class="ds-table">
@@ -99,7 +101,12 @@ const label = (value: ColorValue) => value.ref ?? value.hex
             </tr>
           </thead>
           <tbody>
-            <tr v-for="token in group.tokens" :key="token.name">
+            <tr
+              v-for="token in group.tokens"
+              :id="tokenAnchor(token.name)"
+              :key="token.name"
+              class="scroll-mt-20"
+            >
               <td class="min-w-56">
                 <span class="text-gray-900 dark:text-gray-50">{{ token.shortName }}</span>
                 <span

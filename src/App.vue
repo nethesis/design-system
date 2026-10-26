@@ -14,6 +14,9 @@ import { HOME_PAGE, findPage, pageFromLocation, pageHref, type Page } from './pa
 
 const currentPage = shallowRef(pageFromLocation())
 const sidebarOpen = ref(false)
+// changes when a link opens the current page again, so that the page starts
+// over from the new address, without the filters of the old one
+const visit = ref(0)
 const pageTitle = ref<HTMLElement>()
 
 // links made before the sidebar get the current address
@@ -51,12 +54,16 @@ async function navigate(page: Page, hash = '') {
   sidebarOpen.value = false
   if (page !== currentPage.value || hash) {
     window.history.pushState(null, '', `${pageHref(page)}${hash}`)
+    if (page === currentPage.value) visit.value++
     currentPage.value = page
   }
   await nextTick()
   const target = hash ? await waitForElement(hash.slice(1)) : null
   if (target) {
     target.scrollIntoView()
+    // keyboard and screen reader users continue from the target
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+    target.focus({ preventScroll: true, focusVisible: false } as FocusOptions)
   } else {
     window.scrollTo(0, 0)
     // screen readers announce the new page
@@ -155,7 +162,7 @@ onUnmounted(() => window.removeEventListener('popstate', onPopState))
   </div>
 
   <div class="lg:pl-72">
-    <TopBar @open-sidebar="sidebarOpen = true" />
+    <TopBar @open-sidebar="sidebarOpen = true" @navigate="navigate" />
 
     <main id="main" class="px-4 py-10 sm:px-6 lg:px-8" @click="followPageLink">
       <div class="mx-auto max-w-7xl">
@@ -171,7 +178,7 @@ onUnmounted(() => window.removeEventListener('popstate', onPopState))
             {{ currentPage.description }}
           </p>
         </header>
-        <component :is="currentPage.component" :key="currentPage.id" />
+        <component :is="currentPage.component" :key="`${currentPage.id}-${visit}`" />
       </div>
     </main>
   </div>

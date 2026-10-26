@@ -20,7 +20,11 @@
 // check and cross marks.
 //
 // Each page also exports `toc`, the list of its level 2 headings.
+//
+// Imported with ?search (content/page.md?search), a page is instead a list of
+// its sections in plain text, for the search of the site.
 
+import { readFileSync } from 'node:fs'
 import { basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Marked, Renderer } from 'marked'
@@ -158,10 +162,58 @@ export const toc = ${JSON.stringify(toc).replace(/</g, '\\u003c')}
   return { sfc, errors }
 }
 
+const sectionText = (token) => {
+  if (token.type === 'list') return token.items.map((item) => blockText(item.tokens)).join(' ')
+  if (token.type === 'table') {
+    return [...token.header, ...token.rows.flat()].map((cell) => plainText(cell.tokens)).join(' ')
+  }
+  if (token.type === 'space' || token.type === 'hr') return ''
+  return token.tokens ? plainText(token.tokens) : (token.text ?? '')
+}
+const blockText = (tokens) => tokens.map(sectionText).join(' ')
+
+// The sections of a page, in plain text: the text before the first heading
+// (with an empty id), then one section for each heading below the title.
+// `parent` is the level 2 heading that contains a deeper one.
+export function markdownSections(markdown) {
+  const sections = [{ id: '', title: '', parent: '', text: [] }]
+  let parent = ''
+  for (const token of new Marked().lexer(markdown)) {
+    if (token.type === 'heading' && token.depth > 1) {
+      const title = plainText(token.tokens)
+      if (token.depth === 2) parent = title
+      sections.push({ id: slug(title), title, parent: token.depth === 2 ? '' : parent, text: [] })
+    } else if (token.type !== 'heading') {
+      sections.at(-1).text.push(sectionText(token))
+    }
+  }
+  return sections.map((section) => ({
+    ...section,
+    text: section.text.join(' ').replace(/\s+/g, ' ').trim()
+  }))
+}
+
+const SEARCH_PREFIX = '\0markdown-search:'
+
 export default function markdownPages() {
   return {
     name: 'nethesis:markdown',
     enforce: 'pre',
+    // page.md?search gets its own id, which the Vue plugin does not compile
+    async resolveId(source, importer) {
+      if (!source.endsWith('.md?search')) return
+      const resolved = await this.resolve(source.slice(0, -'?search'.length), importer, {
+        skipSelf: true
+      })
+      if (resolved && CONTENT_PAGE.test(resolved.id)) return `${SEARCH_PREFIX}${resolved.id}`
+    },
+    load(id) {
+      if (!id.startsWith(SEARCH_PREFIX)) return
+      const file = id.slice(SEARCH_PREFIX.length)
+      this.addWatchFile(file)
+      const sections = markdownSections(readFileSync(file, 'utf8'))
+      return `export default ${JSON.stringify(sections).replace(/</g, '\\u003c')}`
+    },
     transform(markdown, id) {
       if (!CONTENT_PAGE.test(id)) return
       const { sfc, errors } = renderMarkdown(markdown, id)

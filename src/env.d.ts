@@ -13,3 +13,9 @@ declare module '*.md' {
   const component: DefineComponent<object, object, unknown>
   export default component
 }
+
+// content/*.md?search: the sections of a page in plain text, for the search
+declare module '*.md?search' {
+  const sections: { id: string; title: string; parent: string; text: string }[]
+  export default sections
+}

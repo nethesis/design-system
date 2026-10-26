@@ -30,6 +30,7 @@ import {
 import glossary from '../generated/glossary.json'
 import { PRODUCT_LABELS, type GlossaryEntry, type Product } from '../types'
 import { REVIEW_LABELS, useReview, type ReviewState } from '../composables/useReview'
+import { normalize } from '../text'
 
 const entries = [...(glossary as GlossaryEntry[])].sort((a, b) => a.en.localeCompare(b.en))
 
@@ -66,13 +67,6 @@ watch([textFilter, productFilter, reviewFilter], () => {
   reviewFilter.value.forEach((o) => url.searchParams.append('review', o.id))
   window.history.replaceState(null, '', url)
 })
-
-// case and accent insensitive search
-const normalize = (text: string) =>
-  text
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
 
 const searchText = (entry: GlossaryEntry) =>
   normalize(
@@ -239,7 +233,10 @@ onMounted(async () => {
             v-for="entry in filteredEntries"
             :id="`term-${entry.id}`"
             :key="entry.id"
-            :class="{ 'bg-primary-100 dark:bg-primary-900': entry.id === highlightedId }"
+            :class="[
+              'scroll-mt-20',
+              { 'bg-primary-100 dark:bg-primary-900': entry.id === highlightedId }
+            ]"
           >
             <NeTableCell data-label="English">
               <div class="flex items-center gap-1">

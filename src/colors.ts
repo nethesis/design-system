@@ -43,6 +43,9 @@ export const GROUPS = [
   { name: 'Utility', description: 'Colors for special cases, such as pulsing indicators.' }
 ]
 
+// the anchor of a group in the Colors page, such as tokens-product-primary
+export const groupAnchor = (name: string) => `tokens-${name.toLowerCase().replace(/ /g, '-')}`
+
 // the palette of each product: in code it is the primary palette
 const PRODUCT_PALETTES: Record<string, string> = {
   NethSecurity: 'cyan',

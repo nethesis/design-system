@@ -7,7 +7,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readdirSync, readFileSync } from 'node:fs'
 import { compileTemplate, parse } from 'vue/compiler-sfc'
-import { CONTENT_DIR, renderMarkdown } from './vite-plugin-markdown.mjs'
+import { CONTENT_DIR, markdownSections, renderMarkdown } from './vite-plugin-markdown.mjs'
 
 const compile = (sfc) => {
   const { descriptor } = parse(sfc, { filename: 'x.md' })
@@ -79,4 +79,26 @@ test('Do and Don\'t tables get the do-dont class', () => {
   assert.deepEqual(errors, [])
   assert.equal(sfc.match(/<table class="do-dont">/g).length, 1)
   assert.equal(sfc.match(/<table>/g).length, 1)
+})
+
+test('the search gets each section as plain text', () => {
+  const sections = markdownSections(
+    "# Page\n\nIntro with a [link](?page=glossary).\n\n## First\n\n- **Bold** item\n- `code`\n\n| Do | Don't |\n| --- | --- |\n| a | b |\n\n### Inner\n\nText.\n\n## Second\n\nMore."
+  )
+  assert.deepEqual(sections, [
+    { id: '', title: '', parent: '', text: 'Intro with a link.' },
+    { id: 'first', title: 'First', parent: '', text: "Bold item code Do Don't a b" },
+    { id: 'inner', title: 'Inner', parent: 'First', text: 'Text.' },
+    { id: 'second', title: 'Second', parent: '', text: 'More.' }
+  ])
+})
+
+test('search sections have the ids of the page headings', () => {
+  for (const file of readdirSync(CONTENT_DIR).filter((name) => name.endsWith('.md'))) {
+    const markdown = readFileSync(`${CONTENT_DIR}${file}`, 'utf8')
+    const { sfc } = renderMarkdown(markdown)
+    for (const { id } of markdownSections(markdown).filter((section) => section.id)) {
+      assert.match(sfc, new RegExp(`<h[2-6] id="${id}">`), `${file}: ${id}`)
+    }
+  }
 })

@@ -8,9 +8,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faArrowUpRightFromSquare, faBars, faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
 import { NeTooltip } from '@nethesis/vue-components'
 import { useTheme } from '../composables/useTheme'
-import { RESOURCES } from '../pages'
+import { RESOURCES, type Page } from '../pages'
+import SearchBox from './SearchBox.vue'
 
-const emit = defineEmits<{ openSidebar: [] }>()
+const emit = defineEmits<{ openSidebar: []; navigate: [page: Page, hash: string] }>()
 const { isDark, toggleTheme } = useTheme()
 
 const iconButtonClasses =
@@ -30,9 +31,7 @@ const iconButtonClasses =
       <FontAwesomeIcon :icon="faBars" class="size-5" aria-hidden="true" />
     </button>
     <div class="h-6 w-px bg-gray-200 lg:hidden dark:bg-gray-700" aria-hidden="true" />
-    <span class="flex-1 truncate text-sm font-medium text-gray-900 lg:invisible dark:text-gray-50">
-      Nethesis Design System
-    </span>
+    <SearchBox @navigate="(page, hash) => emit('navigate', page, hash)" />
 
     <nav aria-label="Other sources" class="hidden items-center gap-x-6 sm:flex">
       <a
