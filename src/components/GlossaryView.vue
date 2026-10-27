@@ -160,7 +160,7 @@ onMounted(async () => {
   window.addEventListener('hashchange', readHash)
   if (highlightedId.value) {
     await nextTick()
-    document.getElementById(`term-${highlightedId.value}`)?.scrollIntoView({ block: 'center' })
+    document.getElementById(`term-${highlightedId.value}`)?.scrollIntoView({ block: 'center', behavior: 'instant' })
   }
 })
 </script>

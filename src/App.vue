@@ -22,7 +22,7 @@ const visit = ref(0)
 const pageTitle = ref<HTMLElement>()
 const notForNethServer8 = computed(() => !!groupOf(currentPage.value)?.notForNethServer8)
 // the sections of the current page, listed in the sidebar
-const { sections, activeSection } = usePageSections('main')
+const { sections, activeSection, holdActiveSection } = usePageSections('main')
 
 // links made before the sidebar get the current address
 const initialUrl = new URL(window.location.href)
@@ -83,12 +83,15 @@ async function navigate(page: Page, hash = '', restart = false) {
   await nextTick()
   const target = hash ? await waitForElement(hash.slice(1)) : null
   if (target) {
+    // smooth, unless the reader prefers reduced motion (see style.css)
+    if (sections.value.some((section) => section.id === target.id)) holdActiveSection(target.id)
     target.scrollIntoView()
     // keyboard and screen reader users continue from the target
     if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
     target.focus({ preventScroll: true, focusVisible: false } as FocusOptions)
   } else {
-    window.scrollTo(0, 0)
+    // a new page starts at the top at once, without scrolling through the old one
+    window.scrollTo({ top: 0, behavior: 'instant' })
     // screen readers announce the new page
     pageTitle.value?.focus({ preventScroll: true })
   }
@@ -128,7 +131,17 @@ onMounted(async () => {
   window.addEventListener('popstate', onPopState)
   // the browser looks for the anchor before the page is rendered
   const id = decodeURIComponent(window.location.hash.slice(1))
-  if (id && !document.getElementById(id)) (await waitForElement(id))?.scrollIntoView()
+  if (!id) return
+  // an address with an anchor opens at the anchor, without scrolling to it: the browser would
+  // otherwise animate its own jump to the anchor while the page loads
+  const html = document.documentElement
+  html.style.scrollBehavior = 'auto'
+  if (!document.getElementById(id)) (await waitForElement(id))?.scrollIntoView()
+  if (document.readyState !== 'complete') {
+    await new Promise((resolve) => window.addEventListener('load', resolve, { once: true }))
+  }
+  await new Promise(requestAnimationFrame)
+  html.style.removeProperty('scroll-behavior')
 })
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 </script>

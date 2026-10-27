@@ -31,6 +31,14 @@
 }
 
 @layer base {
+  /* anchors, the sections of the sidebar and the search results scroll smoothly, unless the
+     reader asked the system for less motion. Changes of page jump at once (App.vue) */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   button:not(:disabled),
   [role='button']:not(:disabled) {
     cursor: pointer;

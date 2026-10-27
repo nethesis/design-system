@@ -17,7 +17,12 @@ export function usePageSections(containerId: string) {
   const sections = shallowRef<PageSection[]>([])
   const activeSection = ref('')
 
+  // while the page scrolls to a section, the headings it passes don't count
+  let held = false
+  let holdTimeout: ReturnType<typeof setTimeout> | undefined
+
   function updateActiveSection() {
+    if (held) return
     let active = ''
     for (const { id } of sections.value) {
       const heading = document.getElementById(id)
@@ -43,6 +48,22 @@ export function usePageSections(containerId: string) {
     updateActiveSection()
   }
 
+  // Marks a section as the current one until the scroll that brings it into
+  // view ends (or after a while, if the page does not scroll at all)
+  function holdActiveSection(id: string) {
+    activeSection.value = id
+    held = true
+    const release = () => {
+      held = false
+      clearTimeout(holdTimeout)
+      window.removeEventListener('scrollend', release)
+      updateActiveSection()
+    }
+    clearTimeout(holdTimeout)
+    window.addEventListener('scrollend', release, { once: true })
+    holdTimeout = setTimeout(release, 1500)
+  }
+
   let frame = 0
   const onScroll = () => {
     cancelAnimationFrame(frame)
@@ -65,9 +86,10 @@ export function usePageSections(containerId: string) {
   onUnmounted(() => {
     observer?.disconnect()
     cancelAnimationFrame(frame)
+    clearTimeout(holdTimeout)
     window.removeEventListener('scroll', onScroll)
     window.removeEventListener('resize', onScroll)
   })
 
-  return { sections, activeSection }
+  return { sections, activeSection, holdActiveSection }
 }
