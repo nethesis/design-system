@@ -45,7 +45,7 @@ the pages:
 
 | File | Content |
 | --- | --- |
-| [`llms.txt`](https://nethesis.github.io/design-system/llms.txt) | Index of the files below |
+| [`llms.txt`](https://nethesis.github.io/design-system/llms.txt) | Index of the files below, and of the `components.json` of the vue-components Storybook |
 | [`writing-guidelines.md`](https://nethesis.github.io/design-system/writing-guidelines.md) | The writing guidelines |
 | [`glossary.json`](https://nethesis.github.io/design-system/glossary.json) | The glossary |
 | [`icons.json`](https://nethesis.github.io/design-system/icons.json) | Which icon to use for each meaning, the icons to avoid, and the custom icons with no meaning yet |

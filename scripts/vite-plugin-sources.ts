@@ -5,7 +5,8 @@
 // coding agents and other tools that cannot run the site: the pages are
 // built in the browser, so fetching them returns no content.
 //
-//   llms.txt               index of the files below
+//   llms.txt               index of the files below, and of components.json
+//                          published by the Storybook of vue-components
 //   writing-guidelines.md  the writing guidelines, as markdown
 //   introduction.md        the introduction, as markdown
 //   glossary.json          the glossary
@@ -195,6 +196,10 @@ The pages of the site (${SITE}) are built in the browser. Read these files inste
 - [Writing guidelines](writing-guidelines.md): how to write interface text, from voice and tone to buttons, forms, empty states, modals and notifications
 - [Glossary](glossary.json): approved terms, Italian translations and terms to avoid
 - [Icons](icons.json): which icon to use for each meaning, and the icons to avoid
+
+## Components
+
+- [Components and patterns](https://nethesis.github.io/vue-components/components.json): the components of @nethesis/vue-components and its patterns, with what each one is for, the replacement of deprecated components, and links to their code and Storybook pages
 
 ## Foundations
 
