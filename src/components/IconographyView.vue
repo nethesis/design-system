@@ -4,39 +4,136 @@
 -->
 
 <script setup lang="ts">
-import type { IconDefinition, IconPack } from '@fortawesome/fontawesome-svg-core'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import type { IconDefinition, IconName, IconPack } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faShieldHalved } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCheck,
+  faLink,
+  faMagnifyingGlass,
+  faShieldHalved
+} from '@fortawesome/free-solid-svg-icons'
 import { fas } from '@nethesis/nethesis-solid-svg-icons'
 import { fal } from '@nethesis/nethesis-light-svg-icons'
 import { fab } from '@nethesis/nethesis-brands-svg-icons'
+import {
+  NeButton,
+  NeEmptyState,
+  NeTable,
+  NeTableBody,
+  NeTableCell,
+  NeTableHead,
+  NeTableHeadCell,
+  NeTableRow,
+  NeTextInput
+} from '@nethesis/vue-components'
+import iconEntries from '../generated/icons.json'
+import iconSvgs from '../generated/icon-svgs.json'
+import glossary from '../generated/glossary.json'
 import { ICON_PACKAGES, ICON_SIZES } from '../foundations'
+import { normalize } from '../text'
+import { useCopyLink } from '../composables/useCopyLink'
+import {
+  ICON_CATEGORIES,
+  ICON_PACK_LABELS,
+  PRODUCT_LABELS,
+  type GlossaryEntry,
+  type IconEntry
+} from '../types'
 
 const icons = (pack: IconPack) =>
-  Object.entries(pack)
-    .map(([name, icon]) => ({ name, icon: icon as IconDefinition }))
+  Object.values(pack)
+    .map((icon) => ({ name: icon.iconName as string, icon: icon as IconDefinition }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
 const CUSTOM_ICONS = [
   {
     id: 'custom-solid',
+    pack: 'ns-solid',
     title: 'Solid',
     packageName: '@nethesis/nethesis-solid-svg-icons',
     icons: icons(fas)
   },
   {
     id: 'custom-light',
+    pack: 'ns-light',
     title: 'Light',
     packageName: '@nethesis/nethesis-light-svg-icons',
     icons: icons(fal)
   },
   {
     id: 'custom-brands',
+    pack: 'ns-brands',
     title: 'Brands',
     packageName: '@nethesis/nethesis-brands-svg-icons',
     icons: icons(fab)
   }
 ]
+
+// the icon dictionary of icons.yaml
+
+const entries = iconEntries as IconEntry[]
+const glossaryTerms = new Map((glossary as GlossaryEntry[]).map((term) => [term.id, term.en]))
+
+// the icons are generated with their paths, so the page does not load the
+// whole Font Awesome pack
+const svgs: Record<string, { width: number; height: number; path: string }> = iconSvgs
+function svg(pack: string, name: string): IconDefinition {
+  const { width, height, path } = svgs[`${pack}:${name}`]
+  return { prefix: 'fas', iconName: name as IconName, icon: [width, height, [], '', path] }
+}
+
+const textFilter = ref('')
+
+const searchText = (entry: IconEntry) =>
+  normalize(
+    [
+      entry.meaning,
+      entry.icon,
+      entry.use,
+      entry.notFor ?? '',
+      entry.notes ?? '',
+      ...(entry.avoid ?? []),
+      ...(entry.products ?? []).map((product) => PRODUCT_LABELS[product])
+    ].join(' ')
+  )
+
+const categories = computed(() => {
+  const query = normalize(textFilter.value.trim())
+  return ICON_CATEGORIES.map((category) => ({
+    ...category,
+    entries: entries.filter(
+      (entry) =>
+        entry.category === category.id && (!query || searchText(entry).includes(query))
+    )
+  })).filter((category) => category.entries.length)
+})
+
+const productsText = (entry: IconEntry) =>
+  entry.products?.map((product) => PRODUCT_LABELS[product]).join(', ')
+
+const { copiedId, copyLink } = useCopyLink('iconography')
+
+// a link like #icon-delete highlights that entry
+const highlightedId = ref('')
+const readHash = () => {
+  highlightedId.value = window.location.hash.startsWith('#icon-')
+    ? window.location.hash.slice('#icon-'.length)
+    : ''
+}
+onMounted(() => {
+  readHash()
+  window.addEventListener('hashchange', readHash)
+})
+onBeforeUnmount(() => window.removeEventListener('hashchange', readHash))
+
+// the meanings of each custom icon, by "<pack>:<name>"
+const customMeanings = new Map<string, IconEntry[]>()
+for (const entry of entries) {
+  const keys = [`${entry.pack}:${entry.icon}`]
+  if (entry.category === 'sidebar') keys.push(`ns-light:${entry.icon}`)
+  for (const key of keys) customMeanings.set(key, [...(customMeanings.get(key) ?? []), entry])
+}
 
 const PACKAGES = ICON_PACKAGES.map(({ name, version }) => `"${name}": "${version}"`).join(',\n')
 </script>
@@ -133,6 +230,132 @@ const PACKAGES = ICON_PACKAGES.map(({ name, version }) => `"${name}": "${version
       </table>
     </div>
 
+    <h2 id="icon-meanings">Meanings</h2>
+    <p>
+      Use the same icon for the same meaning in every product. When a meaning is missing, choose a
+      Font Awesome Solid icon that no other meaning uses, and ask the UX team to add it here.
+    </p>
+    <NeTextInput
+      v-model="textFilter"
+      is-search
+      placeholder="Filter icons"
+      clear-search-label="Clear"
+      class="mb-6 max-w-48 sm:max-w-sm"
+    />
+    <NeEmptyState
+      v-if="!categories.length"
+      :icon="faMagnifyingGlass"
+      title="No icons found"
+      description="Try different or fewer words."
+      class="bg-white dark:bg-gray-950"
+    >
+      <NeButton kind="tertiary" size="lg" @click="textFilter = ''">Clear filter</NeButton>
+    </NeEmptyState>
+    <template v-for="category in categories" :key="category.id">
+      <h3 :id="`icons-${category.id}`">{{ category.title }}</h3>
+      <p>{{ category.description }}</p>
+      <NeTable :aria-label="`${category.title} icons`" card-breakpoint="xl" class="mb-8">
+        <NeTableHead>
+          <!-- the same widths in every table, so the columns line up -->
+          <NeTableHeadCell class="w-56">Meaning</NeTableHeadCell>
+          <NeTableHeadCell class="w-72">Icon</NeTableHeadCell>
+          <NeTableHeadCell>When to use</NeTableHeadCell>
+          <NeTableHeadCell class="w-52">Don't use</NeTableHeadCell>
+        </NeTableHead>
+        <NeTableBody>
+          <NeTableRow
+            v-for="entry in category.entries"
+            :id="`icon-${entry.id}`"
+            :key="entry.id"
+            :class="[
+              'scroll-mt-20',
+              { 'bg-primary-100 dark:bg-primary-900': entry.id === highlightedId }
+            ]"
+          >
+            <NeTableCell data-label="Meaning">
+              <div class="flex items-center gap-1">
+                <span class="font-medium">{{ entry.meaning }}</span>
+                <NeButton
+                  kind="tertiary"
+                  size="xs"
+                  :title="copiedId === entry.id ? 'Link copied' : 'Copy link'"
+                  @click="copyLink(entry.id, `icon-${entry.id}`)"
+                >
+                  <FontAwesomeIcon
+                    :icon="copiedId === entry.id ? faCheck : faLink"
+                    class="size-3"
+                    aria-hidden="true"
+                  />
+                  <span class="sr-only">
+                    {{ copiedId === entry.id ? 'Link copied' : `Copy link to ${entry.meaning}` }}
+                  </span>
+                </NeButton>
+              </div>
+              <p v-if="entry.products" class="mb-0 text-xs text-gray-500 dark:text-gray-400">
+                {{ productsText(entry) }}
+              </p>
+            </NeTableCell>
+            <NeTableCell data-label="Icon">
+              <div class="flex items-center gap-3">
+                <FontAwesomeIcon
+                  v-if="entry.category === 'sidebar'"
+                  :icon="svg('ns-light', entry.icon)"
+                  class="size-5 text-gray-900 dark:text-gray-50"
+                  aria-hidden="true"
+                />
+                <FontAwesomeIcon
+                  :icon="svg(entry.pack, entry.icon)"
+                  class="size-5 text-gray-900 dark:text-gray-50"
+                  aria-hidden="true"
+                />
+                <div>
+                  <code class="whitespace-nowrap">{{ entry.icon }}</code>
+                  <p class="mb-0 text-xs text-gray-500 dark:text-gray-400">
+                    {{
+                      entry.category === 'sidebar'
+                        ? `${ICON_PACK_LABELS['ns-light']} and ${ICON_PACK_LABELS[entry.pack]}`
+                        : ICON_PACK_LABELS[entry.pack]
+                    }}
+                  </p>
+                </div>
+              </div>
+            </NeTableCell>
+            <NeTableCell data-label="When to use">
+              <div class="max-w-md whitespace-normal wrap-anywhere">
+                {{ entry.use }}
+                <p v-if="entry.notFor" class="mt-1 mb-0">Not for: {{ entry.notFor }}</p>
+                <p v-if="entry.notes" class="mt-1 mb-0 text-gray-500 dark:text-gray-400">
+                  {{ entry.notes }}
+                </p>
+                <p v-if="entry.glossary" class="mt-1 mb-0">
+                  Glossary:
+                  <template v-for="(term, index) in entry.glossary" :key="term">
+                    <a
+                      :href="`?page=glossary#term-${term}`"
+                      class="text-primary-700 underline dark:text-primary-500"
+                      >{{ glossaryTerms.get(term) }}</a
+                    ><template v-if="index < entry.glossary.length - 1">, </template>
+                  </template>
+                </p>
+              </div>
+            </NeTableCell>
+            <NeTableCell data-label="Don't use">
+              <ul v-if="entry.avoid" class="mb-0 flex flex-col gap-2">
+                <li v-for="icon in entry.avoid" :key="icon" class="flex items-center gap-2">
+                  <FontAwesomeIcon
+                    :icon="svg('fa-solid', icon)"
+                    class="size-4 text-gray-500 dark:text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <code class="whitespace-nowrap">{{ icon }}</code>
+                </li>
+              </ul>
+            </NeTableCell>
+          </NeTableRow>
+        </NeTableBody>
+      </NeTable>
+    </template>
+
     <h2 id="custom-icons">Custom icons</h2>
     <p>
       The icons of the Nethesis packages. Flags and application icons are only in the
@@ -161,6 +384,23 @@ const PACKAGES = ICON_PACKAGES.map(({ name, version }) => `"${name}": "${version
             aria-hidden="true"
           />
           <span class="font-mono text-xs break-all">{{ item.name }}</span>
+          <ul
+            v-if="customMeanings.has(`${group.pack}:${item.name}`)"
+            class="mb-0 flex flex-col gap-1 text-xs"
+          >
+            <li v-for="entry in customMeanings.get(`${group.pack}:${item.name}`)" :key="entry.id">
+              <a
+                :href="`#icon-${entry.id}`"
+                class="text-primary-700 underline dark:text-primary-500"
+                >{{
+                  entry.category === 'sidebar' && group.pack !== 'ns-light'
+                    ? `Sidebar: ${entry.meaning}`
+                    : entry.meaning
+                }}</a
+              >
+            </li>
+          </ul>
+          <span v-else class="text-xs text-gray-500 italic dark:text-gray-400">No meaning yet</span>
         </li>
       </ul>
     </template>

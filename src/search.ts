@@ -9,11 +9,12 @@ import { fas } from '@nethesis/nethesis-solid-svg-icons'
 import { fal } from '@nethesis/nethesis-light-svg-icons'
 import { fab } from '@nethesis/nethesis-brands-svg-icons'
 import glossary from './generated/glossary.json'
+import iconEntries from './generated/icons.json'
 import { GROUPS, SEMANTIC, groupAnchor, tailwindClasses } from './colors'
 import { TEXT_STYLE_GROUPS } from './foundations'
 import { PAGES, findPage, type Page } from './pages'
 import { normalize, tokenAnchor } from './text'
-import type { GlossaryEntry } from './types'
+import { ICON_CATEGORIES, PRODUCT_LABELS, type GlossaryEntry, type IconEntry } from './types'
 
 export type SearchItem = {
   page: Page
@@ -209,13 +210,36 @@ function buildIndex(): SearchItem[] {
     ['Light', fal],
     ['Brands', fab]
   ]
+  for (const entry of iconEntries as IconEntry[]) {
+    items.push(
+      item({
+        page: iconography,
+        hash: `#icon-${entry.id}`,
+        title: entry.meaning,
+        aliases: [entry.icon],
+        context: [
+          iconography.title,
+          'Meanings',
+          ICON_CATEGORIES.find((category) => category.id === entry.category)!.title
+        ],
+        text: [
+          entry.use,
+          entry.notFor ?? '',
+          entry.notes ?? '',
+          ...(entry.avoid ?? []),
+          ...(entry.products ?? []).map((product) => PRODUCT_LABELS[product])
+        ].join(' '),
+        rank: 2
+      })
+    )
+  }
   for (const [style, pack] of iconPacks) {
-    for (const name of Object.keys(pack)) {
+    for (const icon of Object.values(pack)) {
       items.push(
         item({
           page: iconography,
           hash: `#custom-${style.toLowerCase()}`,
-          title: name,
+          title: icon.iconName,
           context: [iconography.title, 'Custom icons', style],
           text: '',
           rank: 4

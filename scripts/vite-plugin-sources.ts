@@ -9,6 +9,7 @@
 //   writing-guidelines.md  the writing guidelines, as markdown
 //   introduction.md        the introduction, as markdown
 //   glossary.json          the glossary
+//   icons.json             which icon to use for each meaning
 //   colors.json            the color tokens, with their Tailwind classes
 //   foundations.json       typography, iconography, spacing, border,
 //                          focus ring, elevation and shadow
@@ -47,7 +48,7 @@ import {
   focusRing1,
   focusRing2
 } from '../src/foundations.ts'
-import { PRODUCT_LABELS } from '../src/types.ts'
+import { ICON_CATEGORIES, ICON_PACK_LABELS, PRODUCT_LABELS } from '../src/types.ts'
 
 const SITE = 'https://nethesis.github.io/design-system/'
 const file = (path: string) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8')
@@ -104,7 +105,7 @@ function foundations() {
     },
     iconography: {
       page: `${SITE}?page=iconography`,
-      note: 'Free Font Awesome icons, Solid style, shown with FontAwesomeIcon from @fortawesome/vue-fontawesome. Use a Nethesis custom icon only when Font Awesome has none. Light custom icons are only for the inactive sections of the main sidebar. Hide icons next to a text label with aria-hidden="true"; an icon without text needs a label and a tooltip.',
+      note: 'Free Font Awesome icons, Solid style, shown with FontAwesomeIcon from @fortawesome/vue-fontawesome. Use a Nethesis custom icon only when Font Awesome has none. Light custom icons are only for the inactive sections of the main sidebar. Which icon to use for each meaning: icons.json. Hide icons next to a text label with aria-hidden="true"; an icon without text needs a label and a tooltip.',
       packages: ICON_PACKAGES,
       sizes: ICON_SIZES,
       customIcons: { solid: iconNames(fas), light: iconNames(fal), brands: iconNames(fab) }
@@ -134,9 +135,48 @@ function foundations() {
 function glossary() {
   return {
     source: `${SITE}?page=glossary`,
-    note: 'Approved terms of Nethesis user interfaces, with their Italian translation (it) and the terms to avoid. untranslatable: keep the English term in Italian too.',
+    note: 'Approved terms of Nethesis user interfaces, with their Italian translation (it) and the terms to avoid. untranslatable: keep the English term in Italian too. link is the page of the term, to cite in reviews.',
     products: PRODUCT_LABELS,
-    terms: JSON.parse(file('src/generated/glossary.json'))
+    terms: JSON.parse(file('src/generated/glossary.json')).map((term: { id: string }) => ({
+      ...term,
+      link: `${SITE}?page=glossary#term-${term.id}`
+    }))
+  }
+}
+
+type IconEntry = { id: string; icon: string; pack: string; category: string }
+
+function icons() {
+  const entries: IconEntry[] = JSON.parse(file('src/generated/icons.json'))
+  // the custom icons with a meaning: sidebar sections also use the Light icon
+  const named = new Set(
+    entries.flatMap((entry) => [
+      `${entry.pack}:${entry.icon}`,
+      ...(entry.category === 'sidebar' ? [`ns-light:${entry.icon}`] : [])
+    ])
+  )
+  const withoutMeaning = (pack: string, icons: object) =>
+    Object.values(icons)
+      .map((icon) => icon.iconName as string)
+      .filter((name) => !named.has(`${pack}:${name}`))
+      .sort()
+  return {
+    source: `${SITE}?page=iconography#icon-meanings`,
+    note: 'Use the same icon for the same meaning in every product. icon is the kebab-case name: import it as fa + PascalCase (circle-plus: faCirclePlus) from the package of its pack. Sidebar entries use the ns-light icon for the inactive section and the solid one for the active section. avoid lists the icons not to use for that meaning; link is the page of the entry, to cite in reviews. When a meaning is missing, choose a Font Awesome Solid icon that no other meaning uses. Do not use the custom icons listed in customIconsWithoutMeaning: they have no agreed meaning yet.',
+    packs: Object.fromEntries(
+      ICON_PACKAGES.map(({ pack, name }) => [pack, { label: ICON_PACK_LABELS[pack], package: name }])
+    ),
+    categories: ICON_CATEGORIES,
+    products: PRODUCT_LABELS,
+    icons: entries.map((entry) => ({
+      ...entry,
+      link: `${SITE}?page=iconography#icon-${entry.id}`
+    })),
+    customIconsWithoutMeaning: {
+      'ns-solid': withoutMeaning('ns-solid', fas),
+      'ns-light': withoutMeaning('ns-light', fal),
+      'ns-brands': withoutMeaning('ns-brands', fab)
+    }
   }
 }
 
@@ -154,6 +194,7 @@ The pages of the site (${SITE}) are built in the browser. Read these files inste
 
 - [Writing guidelines](writing-guidelines.md): how to write interface text, from voice and tone to buttons, forms, empty states, modals and notifications
 - [Glossary](glossary.json): approved terms, Italian translations and terms to avoid
+- [Icons](icons.json): which icon to use for each meaning, and the icons to avoid
 
 ## Foundations
 
@@ -171,6 +212,7 @@ function sources(): Record<string, string> {
     'writing-guidelines.md': markdown('content/writing-guidelines.md'),
     'introduction.md': markdown('content/introduction.md'),
     'glossary.json': json(glossary(), 2),
+    'icons.json': json(icons(), 2),
     'colors.json': json(colors(), 4),
     'foundations.json': json(foundations(), 3)
   }

@@ -190,13 +190,25 @@ export const TEXT_STYLE_GROUPS: { title: string; styles: TextStyle[] }[] = [
 
 // iconography
 
-// the packages of the icons, as in package.json
+// the packages of the icons, as in package.json, with the pack names of icons.yaml
 export const ICON_PACKAGES = [
-  { name: '@fortawesome/free-solid-svg-icons', version: '^6.7.2' },
-  { name: '@nethesis/nethesis-solid-svg-icons', version: 'github:nethesis/Font-Awesome#ns-solid' },
-  { name: '@nethesis/nethesis-light-svg-icons', version: 'github:nethesis/Font-Awesome#ns-light' },
-  { name: '@nethesis/nethesis-brands-svg-icons', version: 'github:nethesis/Font-Awesome#ns-brands' }
-]
+  { pack: 'fa-solid', name: '@fortawesome/free-solid-svg-icons', version: '^6.7.2' },
+  {
+    pack: 'ns-solid',
+    name: '@nethesis/nethesis-solid-svg-icons',
+    version: 'github:nethesis/Font-Awesome#ns-solid'
+  },
+  {
+    pack: 'ns-light',
+    name: '@nethesis/nethesis-light-svg-icons',
+    version: 'github:nethesis/Font-Awesome#ns-light'
+  },
+  {
+    pack: 'ns-brands',
+    name: '@nethesis/nethesis-brands-svg-icons',
+    version: 'github:nethesis/Font-Awesome#ns-brands'
+  }
+] as const
 
 // sizes and their use, from the Iconography page of the NDS Figma file
 export const ICON_SIZES = [

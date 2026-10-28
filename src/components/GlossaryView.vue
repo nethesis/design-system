@@ -30,6 +30,7 @@ import {
 import glossary from '../generated/glossary.json'
 import { PRODUCT_LABELS, type GlossaryEntry, type Product } from '../types'
 import { REVIEW_LABELS, useReview, type ReviewState } from '../composables/useReview'
+import { useCopyLink } from '../composables/useCopyLink'
 import { normalize } from '../text'
 
 const entries = [...(glossary as GlossaryEntry[])].sort((a, b) => a.en.localeCompare(b.en))
@@ -136,24 +137,7 @@ function readHash() {
     : ''
 }
 
-// copies a link to a term, without filters so the term is always visible
-const copiedId = ref('')
-let copiedTimeout: ReturnType<typeof setTimeout> | undefined
-
-async function copyLink(entry: GlossaryEntry) {
-  const url = new URL(window.location.pathname, window.location.origin)
-  url.searchParams.set('page', 'glossary')
-  url.hash = `term-${entry.id}`
-  try {
-    await navigator.clipboard.writeText(url.href)
-  } catch {
-    // no clipboard access: at least show the link in the address bar
-    window.history.replaceState(null, '', url)
-  }
-  copiedId.value = entry.id
-  clearTimeout(copiedTimeout)
-  copiedTimeout = setTimeout(() => (copiedId.value = ''), 2000)
-}
+const { copiedId, copyLink } = useCopyLink('glossary')
 
 onMounted(async () => {
   readHash()
@@ -245,7 +229,7 @@ onMounted(async () => {
                   kind="tertiary"
                   size="xs"
                   :title="copiedId === entry.id ? 'Link copied' : 'Copy link'"
-                  @click="copyLink(entry)"
+                  @click="copyLink(entry.id, `term-${entry.id}`)"
                 >
                   <FontAwesomeIcon
                     :icon="copiedId === entry.id ? faCheck : faLink"

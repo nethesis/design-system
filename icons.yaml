@@ -1,0 +1,673 @@
+# Nethesis icon dictionary: which icon to use for each meaning.
+#
+# `npm run build:data` validates this file and generates the data of the
+# Iconography page and of icons.json. The conventions come from the icons the
+# products already use (My Nethesis, NethSecurity, NethVoice CTI and
+# @nethesis/vue-components, scanned in October 2026), with the conflicts
+# decided by the UX team.
+#
+# Fields:
+#   id        unique slug, used for links (#icon-<id>)
+#   meaning   what the icon stands for, as a short label
+#   icon      icon name, in kebab case, without the fa prefix
+#   pack      fa-solid (default) | ns-solid | ns-brands
+#             Sidebar sections also have the icon in ns-light, used when the
+#             section is not active.
+#   category  actions | navigation | interface | status | sidebar | objects | brands
+#   use       when to use the icon
+#   notFor    optional: what not to use the icon for
+#   avoid     optional: icons not to use for this meaning
+#   glossary  optional: ids of the related glossary terms
+#   products  optional: the products where the meaning applies, when not all
+#   notes     optional: exceptions and differences between products
+#
+# Example:
+#
+# - id: delete
+#   meaning: Delete
+#   icon: trash
+#   category: actions
+#   use: Permanently destroy an object.
+#   notFor: Taking an object out of a list.
+#   glossary: [delete]
+
+# Actions
+
+- id: create
+  meaning: Create or add
+  icon: circle-plus
+  category: actions
+  use: >-
+    Buttons that create a new object or add an existing one, such as "Create user" or "Add
+    member", also in empty states.
+  avoid: [plus]
+  glossary: [create, add]
+
+- id: add-row
+  meaning: Add a row
+  icon: plus
+  category: actions
+  use: Add another row of fields inside a form, such as another IP address.
+  notFor: Buttons that create or add an object.
+
+- id: edit
+  meaning: Edit
+  icon: pen-to-square
+  category: actions
+  use: Change the data of an object.
+  avoid: [pen]
+  glossary: [edit]
+
+- id: delete
+  meaning: Delete
+  icon: trash
+  category: actions
+  use: Permanently destroy an object.
+  notFor: Taking an object out of a list or an association.
+  glossary: [delete]
+
+- id: remove
+  meaning: Remove
+  icon: circle-minus
+  category: actions
+  use: Take an object out of a list or an association without destroying it, such as a user from a group.
+  avoid: [minus, trash]
+  glossary: [remove]
+
+- id: duplicate
+  meaning: Duplicate
+  icon: clone
+  category: actions
+  use: Create a new object as a copy of an existing one.
+  avoid: [copy]
+
+- id: copy
+  meaning: Copy to clipboard
+  icon: copy
+  category: actions
+  use: Copy a value, such as a key or a link, to the clipboard.
+  notFor: Duplicating an object.
+
+- id: download
+  meaning: Download
+  icon: circle-arrow-down
+  category: actions
+  use: Download a file, such as a backup or a report.
+  avoid: [download, arrow-down]
+
+- id: import
+  meaning: Import or upload
+  icon: circle-arrow-up
+  category: actions
+  use: Import data or upload a file, such as a list of customers or a configuration.
+  notFor: Updating software.
+  avoid: [upload, arrow-up, file-import]
+
+- id: export-csv
+  meaning: Export to CSV
+  icon: file-csv
+  category: actions
+  use: Export data to a CSV file.
+
+- id: export-pdf
+  meaning: Export to PDF
+  icon: file-pdf
+  category: actions
+  use: Export data to a PDF file.
+
+- id: refresh
+  meaning: Refresh
+  icon: arrows-rotate
+  category: actions
+  use: Load the data of a page or a list again.
+  avoid: [rotate, arrow-rotate-right]
+
+- id: update
+  meaning: Update
+  icon: arrows-rotate
+  category: actions
+  use: Update software to a newer version, or show that an update is available.
+  avoid: [circle-arrow-up]
+
+- id: restore
+  meaning: Restore or reset
+  icon: arrow-rotate-left
+  category: actions
+  use: >-
+    Bring back a previous state, such as a backup, or the default values, such as a factory
+    reset.
+  avoid: [rotate-left]
+  glossary: [reset]
+
+- id: save
+  meaning: Save
+  icon: floppy-disk
+  category: actions
+  use: Save the changes of a form, on buttons that show an icon.
+
+- id: settings
+  meaning: Settings
+  icon: gear
+  category: actions
+  use: Open the settings of a page, a feature or the product.
+  notFor: Configuring a single item.
+  avoid: [sliders]
+
+- id: configure
+  meaning: Configure
+  icon: wrench
+  category: actions
+  use: Configure a single item, such as a network interface or an alert.
+  avoid: [sliders]
+
+- id: revoke
+  meaning: Revoke or block
+  icon: ban
+  category: actions
+  use: Revoke or block access, such as an API key or an add-on.
+  notFor: The disabled status.
+
+- id: archive
+  meaning: Archive
+  icon: box-archive
+  category: actions
+  use: Move an object to the archive, from where it can be restored.
+
+- id: suspend
+  meaning: Suspend
+  icon: circle-pause
+  category: actions
+  use: Suspend an object, such as a customer or a system, without deleting it.
+
+- id: reactivate
+  meaning: Reactivate
+  icon: circle-play
+  category: actions
+  use: Reactivate a suspended object.
+
+- id: details
+  meaning: Details
+  icon: eye
+  category: actions
+  use: The Details button of a table row or a card, which opens the page of the object.
+  glossary: [details]
+  notes: NethSecurity uses magnifying-glass-plus to show where an object is used.
+
+- id: search
+  meaning: Search
+  icon: magnifying-glass
+  category: actions
+  use: Search fields and text filters, and empty states with no search results.
+
+- id: sign-in
+  meaning: Sign in
+  icon: arrow-right-to-bracket
+  category: actions
+  use: Enter a product with your credentials.
+  avoid: [right-to-bracket]
+  glossary: [sign-in]
+
+- id: sign-out
+  meaning: Sign out
+  icon: arrow-right-from-bracket
+  category: actions
+  use: Leave a product and end your session.
+  avoid: [right-from-bracket]
+  glossary: [sign-out]
+
+# Navigation
+
+- id: go-to
+  meaning: Go to
+  icon: arrow-right
+  category: navigation
+  use: Links and buttons to another page of the same product, such as "Go to systems".
+  notFor: Links to other sites.
+
+- id: open-external
+  meaning: Open an external site
+  icon: arrow-up-right-from-square
+  category: navigation
+  use: Links and buttons that open another site or product, in a new tab.
+
+- id: next
+  meaning: Next
+  icon: arrow-right
+  category: navigation
+  use: Move to the next step.
+
+- id: previous
+  meaning: Previous
+  icon: arrow-left
+  category: navigation
+  use: Move to the previous step.
+
+# Interface
+
+- id: close
+  meaning: Close
+  icon: xmark
+  category: interface
+  use: Close a modal, a drawer or a notification.
+
+- id: expand
+  meaning: Expand
+  icon: chevron-down
+  category: interface
+  use: Open a menu, a section or a row that shows more content.
+  avoid: [angle-down, caret-down]
+
+- id: collapse
+  meaning: Collapse
+  icon: chevron-up
+  category: interface
+  use: Close an expanded menu, section or row.
+  avoid: [angle-up, caret-up]
+
+- id: actions-menu
+  meaning: More actions
+  icon: ellipsis-vertical
+  category: interface
+  use: The menu with the other actions of a row or a card, as in NeDropdown.
+  avoid: [bars]
+
+- id: sidebar
+  meaning: Open the sidebar
+  icon: bars
+  category: interface
+  use: The button that opens the main sidebar on small screens.
+  notFor: Menus of actions.
+
+- id: help
+  meaning: Help
+  icon: circle-question
+  category: interface
+  use: Open help, or a tooltip with more information about a field.
+  avoid: [question]
+
+- id: show-password
+  meaning: Show password
+  icon: eye
+  category: interface
+  use: Show the text of a password field.
+
+- id: hide-password
+  meaning: Hide password
+  icon: eye-slash
+  category: interface
+  use: Hide the text of a password field.
+
+- id: drag
+  meaning: Drag to reorder
+  icon: grip-vertical
+  category: interface
+  use: The handle to drag a row to another position, such as a firewall rule.
+
+- id: notifications
+  meaning: Notifications
+  icon: bell
+  category: interface
+  use: Open the notifications of the product.
+
+- id: account
+  meaning: Account
+  icon: circle-user
+  category: interface
+  use: Open the menu or the settings of your account.
+
+- id: dark-theme
+  meaning: Dark theme
+  icon: moon
+  category: interface
+  use: Switch to the dark theme.
+
+- id: light-theme
+  meaning: Light theme
+  icon: sun
+  category: interface
+  use: Switch to the light theme.
+
+# Status
+
+- id: info
+  meaning: Information
+  icon: circle-info
+  category: status
+  use: Notifications and messages that give information.
+
+- id: success
+  meaning: Success
+  icon: circle-check
+  category: status
+  use: Notifications and messages of an action that ended well.
+
+- id: warning
+  meaning: Warning
+  icon: triangle-exclamation
+  category: status
+  use: >-
+    Something that needs attention: warning notifications and messages, and objects with a
+    problem, such as active alerts, an outdated version or a system that has never sent its
+    inventory.
+  notFor: An action that failed, which is an error.
+  avoid: [circle-exclamation]
+  notes: NethVoice CTI uses circle-exclamation for emergency queues.
+
+- id: error
+  meaning: Error
+  icon: circle-xmark
+  category: status
+  use: Notifications and messages of an action that failed.
+
+- id: enabled
+  meaning: Enabled
+  icon: circle-check
+  category: status
+  use: The status of an enabled feature or object.
+  avoid: [check]
+  glossary: [enable]
+
+- id: disabled
+  meaning: Disabled
+  icon: circle-xmark
+  category: status
+  use: The status of a disabled feature or object.
+  avoid: [xmark, ban]
+  glossary: [disable]
+
+# Sidebar sections: the Light icon when the section is not active, the Solid
+# icon when it is.
+
+- id: section-dashboard
+  meaning: Dashboard
+  icon: house
+  category: sidebar
+  use: The home page of the product.
+  products: [my, nethsecurity]
+
+- id: section-monitoring
+  meaning: Monitoring and statistics
+  icon: chart-line
+  category: sidebar
+  use: Monitoring pages, and the Queue manager of NethVoice CTI.
+  products: [nethsecurity, nethvoice]
+
+- id: section-systems
+  meaning: Systems and units
+  icon: server
+  category: sidebar
+  use: Systems in My Nethesis, units in the NethSecurity controller, and the System section of NethSecurity.
+  products: [my, nethsecurity]
+
+- id: section-network
+  meaning: Network
+  icon: network-wired
+  category: sidebar
+  use: Network settings.
+  products: [nethsecurity]
+
+- id: section-users
+  meaning: Users
+  icon: user-group
+  category: sidebar
+  use: Users, and the user objects of NethSecurity.
+  products: [my, nethsecurity]
+
+- id: section-firewall
+  meaning: Firewall
+  icon: block-brick-fire
+  pack: ns-solid
+  category: sidebar
+  use: Firewall settings.
+  products: [nethsecurity]
+
+- id: section-security
+  meaning: Security
+  icon: shield-halved
+  category: sidebar
+  use: Security features, such as Threat shield.
+  products: [nethsecurity]
+
+- id: section-vpn
+  meaning: VPN
+  icon: globe
+  category: sidebar
+  use: VPN settings.
+  products: [nethsecurity]
+
+- id: section-distributors
+  meaning: Distributors
+  icon: globe
+  category: sidebar
+  use: The distributors of My Nethesis.
+  products: [my]
+
+- id: section-resellers
+  meaning: Resellers
+  icon: city
+  category: sidebar
+  use: The resellers of My Nethesis.
+  products: [my]
+
+- id: section-customers
+  meaning: Customers
+  icon: building
+  category: sidebar
+  use: The customers of My Nethesis.
+  products: [my]
+
+- id: section-logs
+  meaning: Logs
+  icon: list
+  category: sidebar
+  use: Logs.
+  products: [nethsecurity]
+
+- id: section-settings
+  meaning: Settings
+  icon: gear
+  category: sidebar
+  use: Settings of the product or of the account.
+  products: [nethsecurity, nethvoice]
+
+- id: section-alerts
+  meaning: Alerts
+  icon: triangle-exclamation
+  category: sidebar
+  use: Alerts.
+  products: [my]
+  glossary: [alert]
+
+- id: section-applications
+  meaning: Applications
+  icon: grid-2
+  pack: ns-solid
+  category: sidebar
+  use: The applications of the systems.
+  products: [my]
+  glossary: [application]
+  notes: My Nethesis shows the Nethesis Solid grid-one when the section is active, instead of grid-2.
+
+- id: section-add-ons
+  meaning: Add-ons
+  icon: puzzle-piece
+  category: sidebar
+  use: Add-ons.
+  products: [my]
+  glossary: [add-on]
+
+- id: section-rebranding
+  meaning: Rebranding
+  icon: palette
+  category: sidebar
+  use: Rebranding.
+  products: [my]
+
+- id: section-unit-groups
+  meaning: Unit groups
+  icon: unit-groups
+  pack: ns-solid
+  category: sidebar
+  use: The unit groups of the NethSecurity controller.
+  products: [nethsecurity]
+
+- id: section-operators
+  meaning: Operators
+  icon: headset
+  category: sidebar
+  use: Operators.
+  products: [nethvoice]
+
+- id: section-queues
+  meaning: Queues
+  icon: users
+  category: sidebar
+  use: Queues.
+  products: [nethvoice]
+
+- id: section-phonebook
+  meaning: Phonebook
+  icon: address-book
+  category: sidebar
+  use: Phonebook.
+  products: [nethvoice]
+
+- id: section-history
+  meaning: History
+  icon: clock-rotate-left
+  category: sidebar
+  use: The history of calls.
+  products: [nethvoice]
+
+- id: section-integrations
+  meaning: Applications
+  icon: cubes
+  category: sidebar
+  use: The Applications section of NethVoice CTI, with the integrations of other applications.
+  products: [nethvoice]
+
+# Objects: Nethesis custom icons for objects and actions that Font Awesome
+# does not have
+
+- id: applications
+  meaning: Applications
+  icon: grid-one
+  pack: ns-solid
+  category: objects
+  use: Applications, in tables, cards and counters.
+  products: [my]
+  glossary: [application]
+
+- id: unit-group
+  meaning: Unit group
+  icon: unit-groups
+  pack: ns-solid
+  category: objects
+  use: Unit groups of the NethSecurity controller.
+  products: [nethsecurity]
+
+- id: firewall
+  meaning: Firewall
+  icon: block-brick-fire
+  pack: ns-solid
+  category: objects
+  use: Firewall rules, such as their empty state.
+  products: [nethsecurity]
+
+- id: no-data
+  meaning: No data
+  icon: empty-set
+  pack: ns-solid
+  category: objects
+  use: Charts and cards with no data to show.
+  products: [nethsecurity]
+
+- id: missed-call
+  meaning: Missed call
+  icon: missed
+  pack: ns-solid
+  category: objects
+  use: The status of a missed call.
+  products: [nethvoice]
+
+- id: pick-up
+  meaning: Pick up a call
+  icon: phone-arrow-down-left
+  pack: ns-solid
+  category: objects
+  use: Pick up a call that rings on another phone.
+  products: [nethvoice]
+
+- id: desk-phone
+  meaning: Desk phone
+  icon: office-phone
+  pack: ns-solid
+  category: objects
+  use: Physical phones, among the devices of a user.
+  products: [nethvoice]
+
+- id: record
+  meaning: Record
+  icon: record
+  pack: ns-solid
+  category: objects
+  use: Record an audio message, such as a voicemail greeting.
+  products: [nethvoice]
+
+- id: video-sources
+  meaning: Video sources
+  icon: camera-security
+  pack: ns-solid
+  category: objects
+  use: Video sources, such as security cameras.
+  products: [nethvoice]
+
+- id: standard-layout
+  meaning: Standard layout
+  icon: grid-2
+  pack: ns-solid
+  category: objects
+  use: Show items in a grid.
+  products: [nethvoice]
+
+- id: grouped-layout
+  meaning: Grouped layout
+  icon: grid-dividers
+  pack: ns-solid
+  category: objects
+  use: Show items in a grid, divided into groups.
+  products: [nethvoice]
+
+# Brands
+
+- id: gravatar
+  meaning: Gravatar
+  icon: gravatar
+  pack: ns-brands
+  category: brands
+  use: The logo of Gravatar, such as for a profile picture taken from it.
+  products: [nethvoice]
+
+- id: netflix
+  meaning: Netflix
+  icon: netflix
+  pack: ns-brands
+  category: brands
+  use: The logo of Netflix.
+  products: [nethsecurity]
+
+- id: nordvpn
+  meaning: NordVPN
+  icon: nord-vpn
+  pack: ns-brands
+  category: brands
+  use: The logo of NordVPN.
+  products: [nethsecurity]
+
+- id: x
+  meaning: X
+  icon: square-x-twitter
+  pack: ns-brands
+  category: brands
+  use: The logo of X, formerly Twitter.
+  products: [nethsecurity]
