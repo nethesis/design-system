@@ -53,7 +53,7 @@ the pages:
 | [`foundations.json`](https://nethesis.github.io/design-system/foundations.json) | Typography, iconography, spacing, border, focus ring, elevation and shadow |
 | [`introduction.md`](https://nethesis.github.io/design-system/introduction.md) | The introduction |
 
-The dev server serves them too, for example http://localhost:5179/llms.txt.
+Each file has a `source`, the page of the site it comes from, and each glossary term, icon meaning and color token has a `link` to its anchor in the site. In the markdown files, the links to other pages point to the matching file, such as `glossary.json`. `index.html` links `llms.txt` too, for tools that fetch the site without running it. The dev server serves the files as well, for example http://localhost:5179/llms.txt; restart it after changing `scripts/vite-plugin-sources.ts`.
 
 ## Workflow
 
@@ -101,5 +101,5 @@ In development only, each glossary entry has a "Reviewed" checkbox and the list 
 filter: the marks are saved in the browser and an entry edited after its review shows "Changed
 since review".
 
-`npm test` runs the tests of the markdown plugin, including the security ones. `npm run build` builds the page
+`npm test` runs the tests of the markdown plugin, including the security ones, and of the files for coding agents (`scripts/sources.test.mjs`): every file listed in `llms.txt` exists, the JSON files parse, and every link points to a page and an anchor of the site. `npm run build` builds the page
 into `dist/`.

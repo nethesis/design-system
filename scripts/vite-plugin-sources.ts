@@ -17,21 +17,16 @@
 //
 // The data comes from the same modules as the pages, so the files never
 // disagree with the site. They are written next to index.html by the build
-// and served by the dev server.
+// and served by the dev server. Every file has a source, the page of the site
+// it comes from, and every entry that has an anchor in the site has a link,
+// to cite in reviews.
 
 import { readFileSync } from 'node:fs'
 import type { Plugin } from 'vite'
 import { fas } from '@nethesis/nethesis-solid-svg-icons'
 import { fal } from '@nethesis/nethesis-light-svg-icons'
 import { fab } from '@nethesis/nethesis-brands-svg-icons'
-import {
-  EXPORTED_AT,
-  GROUPS,
-  PRIMITIVES,
-  SEMANTIC,
-  tailwindClasses,
-  tailwindColor
-} from '../src/colors.ts'
+import { EXPORTED_AT, GROUPS, SEMANTIC, groupAnchor, tokenCode } from '../src/colors.ts'
 import {
   BORDER_WIDTHS,
   ELEVATION,
@@ -49,10 +44,19 @@ import {
   focusRing1,
   focusRing2
 } from '../src/foundations.ts'
-import { ICON_CATEGORIES, ICON_PACK_LABELS, PRODUCT_LABELS } from '../src/types.ts'
+import { tokenAnchor } from '../src/text.ts'
+import {
+  ICON_CATEGORIES,
+  ICON_PACK_LABELS,
+  PRODUCT_LABELS,
+  type GlossaryEntry,
+  type IconEntry
+} from '../src/types.ts'
 
-const SITE = 'https://nethesis.github.io/design-system/'
+export const SITE = 'https://nethesis.github.io/design-system/'
+const page = (id: string, anchor = '') => `${SITE}?page=${id}${anchor ? `#${anchor}` : ''}`
 const file = (path: string) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8')
+const glossaryTerms = (): GlossaryEntry[] => JSON.parse(file('src/generated/glossary.json'))
 
 // JSON indented for the given number of levels, then on one line: each token,
 // term or value takes one line, readable without wasting space
@@ -71,52 +75,76 @@ function format(value: unknown, levels: number, indent: string): string {
 }
 const json = (value: unknown, levels: number) => `${format(value, levels, '')}\n`
 
-// links to other pages of the site (?page=glossary) point to the site
-const markdown = (path: string) => file(path).replace(/\]\(\?page=/g, `](${SITE}?page=`)
+// The file published for each page of the site. The links of the markdown
+// files to other pages (?page=glossary) point to these files, which an agent
+// can read, keeping the anchor as a hint to the section.
+export const PAGE_FILES: Record<string, string> = {
+  introduction: 'introduction.md',
+  'writing-guidelines': 'writing-guidelines.md',
+  glossary: 'glossary.json',
+  colors: 'colors.json',
+  typography: 'foundations.json',
+  iconography: 'icons.json',
+  'spacing-and-border': 'foundations.json',
+  'elevation-and-shadow': 'foundations.json'
+}
+
+const markdown = (path: string) =>
+  file(path).replace(/\]\(\?page=([a-z-]+)(#[a-z0-9-]+)?\)/g, (_, id: string, anchor = '') => {
+    if (!PAGE_FILES[id]) throw new Error(`${path}: no published file for ?page=${id}`)
+    return `](${PAGE_FILES[id]}${anchor})`
+  })
+
+// a CSS rem value, such as 0.125rem
+const rem = (px: number) => `${px / 16}rem`
 
 function colors() {
   return {
-    source: `${SITE}?page=colors`,
+    source: page('colors'),
     exportedAt: EXPORTED_AT,
-    note: 'Use the semantic tokens, not the primitive colors. In code, the primary palette is the palette of the product, so the Product Primary and product link tokens use primary-* classes. classes is null when a value has no Tailwind color.',
+    note: 'Use these semantic tokens, not the colors of the palettes. light and dark are the values of a token in the two themes; tailwind is the Tailwind color to use in code. In code, the primary palette is the palette of the product, so the Product Primary and product link tokens use primary-* colors. classes are the Tailwind classes for both themes; they are null when the utility depends on the component (text, background, border…) or when a value has no Tailwind color: then build them from the two tailwind colors, as in text-primary-700 dark:text-primary-500. link is the token in the Colors page, to cite in reviews.',
     groups: GROUPS.map((group) => ({
       ...group,
-      tokens: SEMANTIC.filter((token) => token.name.startsWith(`${group.name}/`)).map((token) => ({
-        name: token.name,
-        description: token.description,
-        light: { ...token.light, tailwind: tailwindColor(token.light.ref) },
-        dark: { ...token.dark, tailwind: tailwindColor(token.dark.ref) },
-        classes: tailwindClasses(token)
-      }))
-    })),
-    primitives: PRIMITIVES.map((color) => ({ ...color, tailwind: tailwindColor(color.name) }))
+      link: page('colors', groupAnchor(group.name)),
+      tokens: SEMANTIC.filter((token) => token.name.startsWith(`${group.name}/`)).map((token) => {
+        const code = tokenCode(token)
+        return {
+          name: token.name,
+          description: token.description,
+          light: { ...token.light, tailwind: code.light },
+          dark: { ...token.dark, tailwind: code.dark },
+          classes: code.classes,
+          link: page('colors', tokenAnchor(token.name))
+        }
+      })
+    }))
   }
 }
 
 function foundations() {
-  const iconNames = (pack: object) => Object.keys(pack).sort()
   return {
     source: SITE,
+    note: 'Each section has its source, the page of the site it comes from. px values are CSS pixels; rem values assume a 16 px root font size.',
     typography: {
-      page: `${SITE}?page=typography`,
+      source: page('typography'),
       typeface: TYPEFACE,
       weights: FONT_WEIGHTS,
       sizes: TEXT_SIZES,
       textStyles: TEXT_STYLE_GROUPS
     },
     iconography: {
-      page: `${SITE}?page=iconography`,
-      note: 'Free Font Awesome icons, Solid style, shown with FontAwesomeIcon from @fortawesome/vue-fontawesome. Use a Nethesis custom icon only when Font Awesome has none. Light custom icons are only for the inactive sections of the main sidebar. Which icon to use for each meaning: icons.json. Hide icons next to a text label with aria-hidden="true"; an icon without text needs a label and a tooltip.',
+      source: page('iconography'),
+      note: 'Which icon to use for each meaning, from which package: icons.json. Font Awesome Solid icons, and Nethesis custom icons where icons.json uses them; Light custom icons only for the inactive sections of the main sidebar. Import each icon by name from its package and pass the imported object to FontAwesomeIcon, from @fortawesome/vue-fontawesome; do not register icons with library.add() to use them by name. Hide icons next to a text label with aria-hidden="true"; an icon without text needs a label and a tooltip.',
       packages: ICON_PACKAGES,
-      sizes: ICON_SIZES,
-      customIcons: { solid: iconNames(fas), light: iconNames(fal), brands: iconNames(fab) }
+      sizes: ICON_SIZES
     },
     spacingAndBorder: {
-      page: `${SITE}?page=spacing-and-border`,
-      spacing: SPACING,
-      radii: RADII,
+      source: page('spacing-and-border'),
+      spacing: SPACING.map((space) => ({ ...space, rem: rem(space.px) })),
+      radii: RADII.map((radius) => ({ ...radius, rem: radius.px === 9999 ? null : rem(radius.px) })),
       borderWidths: BORDER_WIDTHS,
       focusRing: {
+        note: 'The focus ring shows which element has the keyboard focus. Focus ring 1 is a 2 px ring around the element; focus ring 2 leaves a 2 px gap between the element and the ring. In code, the primary palette is the palette of the product, so the classes are the same in every product: focus-visible:ring-2 focus-visible:ring-primary-500 for focus ring 1, plus focus-visible:ring-offset-2 for focus ring 2. On a status color, focus ring 2 uses the classes of that status. styles are the box-shadow values of the Figma effect styles.',
         styles: {
           'Focus ring/1': focusRing1('<ring color>'),
           'Focus ring/2': focusRing2('<ring color>', '<gap color, white by default>')
@@ -126,7 +154,8 @@ function foundations() {
       }
     },
     elevationAndShadow: {
-      page: `${SITE}?page=elevation-and-shadow`,
+      source: page('elevation-and-shadow'),
+      note: 'Each elevation level, from L0 to L4, is a surface color of the gray palette, for the backgrounds of the page, the top bar, the sidebar and the cards; L2 invert uses the L0 color to stand out on an L1 surface. Shadows apply to components such as cards, buttons, modals and tooltips; in the dark theme they are gray instead of black.',
       elevation: ELEVATION,
       shadows: SHADOWS
     }
@@ -135,20 +164,16 @@ function foundations() {
 
 function glossary() {
   return {
-    source: `${SITE}?page=glossary`,
-    note: 'Approved terms of Nethesis user interfaces, with their Italian translation (it) and the terms to avoid. untranslatable: keep the English term in Italian too. link is the page of the term, to cite in reviews.',
+    source: page('glossary'),
+    note: 'Approved terms of Nethesis user interfaces, with their Italian translation (it) and the terms to avoid. untranslatable: keep the English term in Italian too. products lists the products a term applies to, all for every product. link is the term in the Glossary page, to cite in reviews.',
     products: PRODUCT_LABELS,
-    terms: JSON.parse(file('src/generated/glossary.json')).map((term: { id: string }) => ({
-      ...term,
-      link: `${SITE}?page=glossary#term-${term.id}`
-    }))
+    terms: glossaryTerms().map((term) => ({ ...term, link: page('glossary', `term-${term.id}`) }))
   }
 }
 
-type IconEntry = { id: string; icon: string; pack: string; category: string }
-
 function icons() {
   const entries: IconEntry[] = JSON.parse(file('src/generated/icons.json'))
+  const terms = new Map(glossaryTerms().map((term) => [term.id, term]))
   // the custom icons with a meaning: sidebar sections also use the Light icon
   const named = new Set(
     entries.flatMap((entry) => [
@@ -162,8 +187,8 @@ function icons() {
       .filter((name) => !named.has(`${pack}:${name}`))
       .sort()
   return {
-    source: `${SITE}?page=iconography#icon-meanings`,
-    note: 'Use the same icon for the same meaning in every product. icon is the kebab-case name: import it as fa + PascalCase (circle-plus: faCirclePlus) from the package of its pack. Sidebar entries use the ns-light icon for the inactive section and the solid one for the active section. avoid lists the icons not to use for that meaning; link is the page of the entry, to cite in reviews. When a meaning is missing, choose a Font Awesome Solid icon that no other meaning uses. Do not use the custom icons listed in customIconsWithoutMeaning: they have no agreed meaning yet.',
+    source: page('iconography', 'icon-meanings'),
+    note: 'Use the same icon for the same meaning in every product; NethServer 8 modules, which follow the Carbon Design System, are excluded. icon is the kebab-case name: import it as fa + PascalCase (circle-plus: faCirclePlus) from the package of its pack, and pass the imported object to FontAwesomeIcon. Sidebar entries use the ns-light icon for the inactive section and the solid one for the active section. avoid lists the Font Awesome Solid icons not to use for that meaning. products lists the products that use the entry; without it, the entry applies to every product. glossary lists the terms of the glossary for the actions and objects of the entry. link is the entry in the Iconography page, to cite in reviews. When a meaning is missing, choose a Font Awesome Solid icon that no other meaning uses. Do not use the custom icons listed in customIconsWithoutMeaning: they have no agreed meaning yet.',
     packs: Object.fromEntries(
       ICON_PACKAGES.map(({ pack, name }) => [pack, { label: ICON_PACK_LABELS[pack], package: name }])
     ),
@@ -171,7 +196,16 @@ function icons() {
     products: PRODUCT_LABELS,
     icons: entries.map((entry) => ({
       ...entry,
-      link: `${SITE}?page=iconography#icon-${entry.id}`
+      ...(entry.glossary
+        ? {
+            glossary: entry.glossary.map((id) => ({
+              id,
+              en: terms.get(id)!.en,
+              link: page('glossary', `term-${id}`)
+            }))
+          }
+        : {}),
+      link: page('iconography', `icon-${entry.id}`)
     })),
     customIconsWithoutMeaning: {
       'ns-solid': withoutMeaning('ns-solid', fas),
@@ -211,16 +245,15 @@ The pages of the site (${SITE}) are built in the browser. Read these files inste
 - [Introduction](introduction.md): what the design system is made of, and how it applies to NethServer 8
 `
 
-function sources(): Record<string, string> {
-  return {
-    'llms.txt': LLMS,
-    'writing-guidelines.md': markdown('content/writing-guidelines.md'),
-    'introduction.md': markdown('content/introduction.md'),
-    'glossary.json': json(glossary(), 2),
-    'icons.json': json(icons(), 2),
-    'colors.json': json(colors(), 4),
-    'foundations.json': json(foundations(), 3)
-  }
+// the published files, each built only when it is requested
+export const SOURCES: Record<string, () => string> = {
+  'llms.txt': () => LLMS,
+  'writing-guidelines.md': () => markdown('content/writing-guidelines.md'),
+  'introduction.md': () => markdown('content/introduction.md'),
+  'glossary.json': () => json(glossary(), 2),
+  'icons.json': () => json(icons(), 2),
+  'colors.json': () => json(colors(), 4),
+  'foundations.json': () => json(foundations(), 3)
 }
 
 const CONTENT_TYPES: Record<string, string> = {
@@ -235,15 +268,14 @@ export default function publishSources(): Plugin {
     configureServer(server) {
       server.middlewares.use((request, response, next) => {
         const name = request.url?.split('?')[0].slice(1) ?? ''
-        const content = Object.hasOwn(sources(), name) ? sources()[name] : undefined
-        if (content === undefined) return next()
+        if (!Object.hasOwn(SOURCES, name)) return next()
         response.setHeader('Content-Type', CONTENT_TYPES[name.split('.').pop()!])
-        response.end(content)
+        response.end(SOURCES[name]())
       })
     },
     generateBundle() {
-      for (const [fileName, source] of Object.entries(sources())) {
-        this.emitFile({ type: 'asset', fileName, source })
+      for (const [fileName, build] of Object.entries(SOURCES)) {
+        this.emitFile({ type: 'asset', fileName, source: build() })
       }
     }
   }

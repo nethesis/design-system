@@ -99,15 +99,24 @@ function codeColor(token: SemanticColor, value: ColorValue): string | null {
   return color
 }
 
-// The Tailwind classes that reproduce a token in both themes, such as
-// "text-gray-400 dark:text-gray-500", or the bare colors when the utility
-// depends on the component. Null when a value has no Tailwind color.
-export function tailwindClasses(token: SemanticColor): string | null {
+// The Tailwind colors of a token in code, primary-* for the product palettes,
+// and its classes for both themes, such as "text-gray-400 dark:text-gray-500".
+// classes is null when the utility depends on the component or when a value
+// has no Tailwind color.
+export function tokenCode(token: SemanticColor) {
   const light = codeColor(token, token.light)
   const dark = codeColor(token, token.dark)
-  if (!light || !dark) return null
   const prefix = utility(token.name)
-  return prefix ? `${prefix}-${light} dark:${prefix}-${dark}` : `${light} · dark: ${dark}`
+  const classes = light && dark && prefix ? `${prefix}-${light} dark:${prefix}-${dark}` : null
+  return { light, dark, classes }
+}
+
+// The classes of a token for the Colors page: the bare colors when the
+// utility depends on the component. Null when a value has no Tailwind color.
+export function tailwindClasses(token: SemanticColor): string | null {
+  const { light, dark, classes } = tokenCode(token)
+  if (!light || !dark) return null
+  return classes ?? `${light} · dark: ${dark}`
 }
 
 // primitives grouped by palette, for the swatches
