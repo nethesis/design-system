@@ -129,12 +129,13 @@ From the [*New password form* pattern](https://nethesis.github.io/vue-components
 - **Labels** are nouns that name the information or setting, not the way to enter it: `Username`, `Language`, `Admin password`. Use the same terms as the table columns and the detail views. A label can be a short instruction when a noun would be unclear, as in `Confirm new password`.
 - **Helper text** says why the information is needed, how it is used or which format is expected. Don't repeat the label, and show the requirements before an error happens. Keep it true both when the field is empty and when it is filled.
 - **Placeholders** show an example or the expected format (`e.g. name@example.com`), or say briefly what to do (`Filter users`). Never use a placeholder instead of a label, and don't repeat the label.
-- **Validation messages** say what is wrong and, when useful, how to fix it, in a positive way. Don't blame users, and don't use `Invalid value` when the requirement is known.
+- **Validation messages** say what is wrong and, when useful, how to fix it. Prefer an instruction (`Enter a valid email address`); when no instruction fits, state the problem neutrally (`Passwords do not match`). Don't blame users, and don't use `Invalid value` when the requirement is known.
 - Mark optional fields, not required ones. When a required field is empty, say `Required`, or give a positive instruction that names what is missing: `Enter a username`, `Select a language`, `Enter an integer number`.
+
+Validation messages:
 
 | Do | Don't |
 | --- | --- |
-| Language | Select language |
 | Enter a valid email address | Email address is not valid |
 | Password must contain at least 8 characters | Invalid value |
 | Passwords do not match | You entered two different passwords |
