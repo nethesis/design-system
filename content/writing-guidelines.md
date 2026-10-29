@@ -159,7 +159,7 @@ From the [*Table page* pattern](https://nethesis.github.io/vue-components/?path=
 | Applies to | Label | Italian |
 | --- | --- | --- |
 | All the filters of a table, from the toolbar or the empty state | Reset filters | Reimposta filtri |
-| One dropdown filter that has a default selection | Reset selection | Reimposta selezione |
+| One dropdown filter that has something selected by default | Reset selection | Reimposta selezione |
 | One dropdown filter that has nothing selected by default | Clear selection | Azzera selezione |
 | The only filter of a table or a collection, a text filter, from the empty state | Clear filter | Azzera filtro |
 | The clear button of the text filter (screen readers only) | Clear search | Azzera ricerca |
@@ -169,7 +169,7 @@ The label of a dropdown filter names the data category, with a noun and the same
 | Do | Don't |
 | --- | --- |
 | Reset filters (for a table with several filters) | Clear filters |
-| Reset selection (inside a dropdown filter with a default selection) | Clear selection |
+| Reset selection (inside a dropdown filter with something selected by default) | Clear selection |
 | Clear selection (inside a dropdown filter with nothing selected by default) | Reset selection |
 | Clear filter (for a table with only a text filter) | Reset filters |
 | Clear filter (for a collection with only a text filter) | Clear filters |
