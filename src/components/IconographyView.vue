@@ -201,7 +201,7 @@ const PACKAGES = ICON_PACKAGES.map(({ name, version }) => `"${name}": "${version
     </div>
 
     <h2 id="size">Size</h2>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>

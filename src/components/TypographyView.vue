@@ -52,7 +52,7 @@ const inlineStyle = (size: number, lineHeight: number) => ({
       Sizes are named like the Tailwind CSS classes, from xs to 8xl, plus xxs. Each size comes with
       its own line height.
     </p>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>
@@ -100,7 +100,7 @@ const inlineStyle = (size: number, lineHeight: number) => ({
     <p>The text styles of Figma, with the Tailwind classes that reproduce them.</p>
     <template v-for="group in TEXT_STYLE_GROUPS" :key="group.title">
       <h3>{{ group.title }}</h3>
-      <div class="overflow-x-auto">
+      <div class="table-frame">
         <table class="ds-table">
           <thead>
             <tr>

@@ -90,7 +90,7 @@ const label = (value: ColorValue) => value.ref ?? value.hex
     <template v-for="group in groups" :key="group.name">
       <h3 :id="groupAnchor(group.name)">{{ group.name }}</h3>
       <p>{{ group.description }}</p>
-      <div class="overflow-x-auto">
+      <div class="table-frame">
         <table class="ds-table">
           <thead>
             <tr>
@@ -165,7 +165,7 @@ const label = (value: ColorValue) => value.ref ?? value.hex
       </div>
     </div>
     <h3>Other colors</h3>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>

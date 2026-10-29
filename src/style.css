@@ -63,8 +63,7 @@
     @apply mt-6 mb-2 scroll-mt-20 font-medium text-gray-900 dark:text-gray-50;
   }
   p,
-  ul,
-  table {
+  ul {
     @apply mb-4;
   }
   ul {
@@ -77,19 +76,20 @@
     @apply rounded bg-gray-100 px-1 py-0.5 text-[0.8125rem] dark:bg-gray-800;
   }
   /* more space around tables than between paragraphs, so they stand apart */
-  table {
-    @apply my-6 w-full border-collapse overflow-hidden rounded-md text-left;
+  .table-frame {
+    @apply my-6;
   }
-  th {
-    @apply border-b border-gray-300 bg-gray-100 px-2 py-2 font-medium text-gray-900 sm:px-3 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-50;
-  }
-  td {
-    @apply border-b border-gray-200 px-2 py-2 align-top sm:px-3 dark:border-gray-700;
-  }
-  /* on small screens long words break, instead of making the page wider */
-  th,
-  td {
-    overflow-wrap: anywhere;
+  /* tables of text: long words break on small screens, instead of making the page
+     wider, and cells start at the top */
+  .ds-table {
+    th,
+    td {
+      @apply whitespace-normal;
+      overflow-wrap: anywhere;
+    }
+    td {
+      @apply align-top;
+    }
   }
 
   /* Do / Don't tables: check and cross marks before each example */
@@ -140,13 +140,19 @@
   }
 }
 
+/* Every table of the site has the look of NeTable, from @nethesis/vue-components:
+   <div class="table-frame"><table class="ds-table">. The frame scrolls when the table is
+   wider than the page. */
+.table-frame {
+  @apply mb-4 overflow-x-auto rounded-lg border border-gray-300 shadow-sm dark:border-gray-600;
+}
 .ds-table {
-  @apply w-full border-collapse text-left;
+  @apply w-full border-collapse bg-white text-left text-sm text-gray-700 dark:bg-gray-950 dark:text-gray-200;
 
   th {
-    @apply border-b border-gray-300 bg-gray-100 px-3 py-2 font-medium whitespace-nowrap text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-50;
+    @apply bg-gray-100 px-3 py-3 font-medium whitespace-nowrap text-gray-900 sm:px-6 dark:bg-gray-800 dark:text-gray-50;
   }
   td {
-    @apply border-b border-gray-200 px-3 py-2 align-middle dark:border-gray-700;
+    @apply border-t border-gray-300 px-3 py-4 align-middle sm:px-6 dark:border-gray-600;
   }
 }

@@ -38,7 +38,7 @@ const { isDark } = useTheme()
         </div>
       </div>
     </div>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>
@@ -67,7 +67,7 @@ const { isDark } = useTheme()
       about interactivity and layering. Each Figma shadow token matches a Tailwind CSS shadow class.
       In the dark theme the shadows are gray instead of black, and the drawer shadow is darker.
     </p>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>

@@ -69,11 +69,11 @@ test('external links open in a new tab', () => {
   assert.match(sfc, /href="#c">/)
 })
 
-test('Do and Don\'t tables get the do-dont class', () => {
+test('tables get the table classes, and Do and Don\'t tables the do-dont class', () => {
   const { errors, sfc } = renderMarkdown("| Do | Don't |\n| --- | --- |\n| a | b |\n\n| A | B |\n| --- | --- |\n| c | d |")
   assert.deepEqual(errors, [])
-  assert.equal(sfc.match(/<table class="do-dont">/g).length, 1)
-  assert.equal(sfc.match(/<table>/g).length, 1)
+  assert.equal(sfc.match(/<div class="table-frame"><table class="ds-table do-dont">/g).length, 1)
+  assert.equal(sfc.match(/<div class="table-frame"><table class="ds-table">/g).length, 1)
 })
 
 test('the search gets each section as plain text', () => {

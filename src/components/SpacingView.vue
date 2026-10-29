@@ -23,7 +23,7 @@ import {
       each step is 4 px (0.25 rem), and the step is the number in classes such as
       <code>p-4</code>, <code>m-2</code>, <code>gap-6</code> or <code>w-10</code>.
     </p>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>
@@ -51,7 +51,7 @@ import {
 
     <h2 id="border-radius">Border radius</h2>
     <p>Rounded corners use the Tailwind CSS radius classes.</p>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>
@@ -88,7 +88,7 @@ import {
       Border widths use the Tailwind CSS border classes. The border color comes from the border
       color tokens.
     </p>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>
@@ -131,7 +131,7 @@ import {
       <code>ring-2 ring-primary-500 ring-offset-2</code> for focus ring 2, after the
       <code>focus:</code> or <code>focus-visible:</code> prefix.
     </p>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>
@@ -173,7 +173,7 @@ import {
       Focus ring 2 also comes in the status colors. Its gap takes a light shade of the same color,
       for elements on a colored background such as a notification.
     </p>
-    <div class="overflow-x-auto">
+    <div class="table-frame">
       <table class="ds-table">
         <thead>
           <tr>

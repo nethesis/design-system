@@ -16,8 +16,9 @@
 //     check runs on Vue's own syntax tree: only the elements and attributes
 //     that plain markdown produces are accepted.
 //
-// Tables whose header is "Do | Don't" get the do-dont class, styled with
-// check and cross marks.
+// Tables get the look of the other tables of the site (ds-table in a
+// table-frame), and those whose header is "Do | Don't" also the do-dont class,
+// styled with check and cross marks.
 //
 // Imported with ?search (content/page.md?search), a page is instead a list of
 // its sections in plain text, for the search of the site.
@@ -58,7 +59,8 @@ const ALLOWED = {
   del: {},
   code: { class: /^language-[a-z0-9-]+$/ },
   pre: {},
-  table: { class: /^do-dont$/ },
+  div: { class: /^table-frame$/ },
+  table: { class: /^ds-table( do-dont)?$/ },
   thead: {},
   tbody: {},
   tr: {},
@@ -102,7 +104,8 @@ export function renderMarkdown(markdown, filename = 'page.md') {
       table(token) {
         const html = Renderer.prototype.table.call(this, token)
         const header = token.header.map((cell) => plainText(cell.tokens))
-        return header.join('|') === "Do|Don't" ? html.replace(/^<table>/, '<table class="do-dont">') : html
+        const classes = header.join('|') === "Do|Don't" ? 'ds-table do-dont' : 'ds-table'
+        return `<div class="table-frame">${html.replace(/^<table>/, `<table class="${classes}">`)}</div>\n`
       },
       heading({ tokens, depth }) {
         const title = plainText(tokens)
