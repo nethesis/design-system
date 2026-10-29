@@ -39,7 +39,13 @@ that it agrees with this guide. Remove an item once it is done.
   - the Website and My Nethesis tokens mention NethService;
   - `Text/Warning` says "on rose background";
   - `Elevation/L0`, `L2`, `L2 invert`, `L3` and `L4` all say "content on S0 (es: cards)";
-  - `Border/Ring/Toast` and the `Border/Accent` tokens say "components like InlineNotification".
+  - `Border/Ring/Toast` and the `Border/Accent` tokens say "components like InlineNotification";
+  - 29 `Surface` tokens (Rounded icon, Phone island, Toggle, Skeleton, Scrollbar, the status
+    surfaces…) and the 5 `Text/Calls and status` tokens say "Icons or content not text", the
+    description of the Icon tokens.
+- [ ] **Semantic colors** variables: 163 of the 251 tokens have no description, among them 52 of the
+  56 `Icon` tokens, 30 of the 47 `Text` tokens and all the `Utility` tokens. The site and
+  `colors.json` show the descriptions to designers and coding agents.
 - [ ] **Elevation and shadow** page: the variables include `Elevation/L4` (gray-300, dark gray-600),
   which the page does not show.
 
