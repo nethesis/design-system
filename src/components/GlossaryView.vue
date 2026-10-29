@@ -164,7 +164,7 @@ onMounted(async () => {
           v-model="textFilter"
           is-search
           placeholder="Filter terms"
-          clear-search-label="Clear"
+          clear-search-label="Clear search"
           class="max-w-48 sm:max-w-sm"
         />
         <NeDropdownFilterV2
@@ -176,7 +176,7 @@ onMounted(async () => {
           open-menu-aria-label="Open filter"
           no-options-label="No options"
           more-options-hidden-label="Continue typing to show more options"
-          clear-search-label="Clear"
+          clear-search-label="Clear search"
         />
         <NeDropdownFilterV2
           v-if="review.enabled"
@@ -188,7 +188,7 @@ onMounted(async () => {
           open-menu-aria-label="Open filter"
           no-options-label="No options"
           more-options-hidden-label="Continue typing to show more options"
-          clear-search-label="Clear"
+          clear-search-label="Clear search"
         />
         <NeButton v-if="isFiltered" kind="tertiary" @click="resetFilters">Reset filters</NeButton>
         <span v-if="review.enabled" class="text-sm text-gray-500 dark:text-gray-400 lg:ml-auto">
@@ -223,37 +223,40 @@ onMounted(async () => {
             ]"
           >
             <NeTableCell data-label="English">
-              <div class="flex items-center gap-1">
-                <span class="font-medium">{{ entry.en }}</span>
-                <NeButton
-                  kind="tertiary"
-                  size="xs"
-                  :title="copiedId === entry.id ? 'Link copied' : 'Copy link'"
-                  @click="copyLink(entry.id, `term-${entry.id}`)"
-                >
-                  <FontAwesomeIcon
-                    :icon="copiedId === entry.id ? faCheck : faLink"
-                    class="size-3"
-                    aria-hidden="true"
+              <!-- one element: in the card layout each child of a cell takes a grid column -->
+              <div>
+                <div class="flex items-center gap-1">
+                  <span class="font-medium">{{ entry.en }}</span>
+                  <NeButton
+                    kind="tertiary"
+                    size="xs"
+                    :title="copiedId === entry.id ? 'Link copied' : 'Copy link'"
+                    @click="copyLink(entry.id, `term-${entry.id}`)"
+                  >
+                    <FontAwesomeIcon
+                      :icon="copiedId === entry.id ? faCheck : faLink"
+                      class="size-3"
+                      aria-hidden="true"
+                    />
+                    <span class="sr-only">
+                      {{ copiedId === entry.id ? 'Link copied' : `Copy link to ${entry.en}` }}
+                    </span>
+                  </NeButton>
+                </div>
+                <div v-if="review.enabled" class="mt-2">
+                  <NeCheckbox
+                    :id="`review-${entry.id}`"
+                    :model-value="review.reviewState(entry) === 'reviewed'"
+                    label="Reviewed"
+                    @update:model-value="review.setReviewed(entry, $event)"
                   />
-                  <span class="sr-only">
-                    {{ copiedId === entry.id ? 'Link copied' : `Copy link to ${entry.en}` }}
-                  </span>
-                </NeButton>
-              </div>
-              <div v-if="review.enabled" class="mt-2">
-                <NeCheckbox
-                  :id="`review-${entry.id}`"
-                  :model-value="review.reviewState(entry) === 'reviewed'"
-                  label="Reviewed"
-                  @update:model-value="review.setReviewed(entry, $event)"
-                />
-                <p
-                  v-if="review.reviewState(entry) === 'changed'"
-                  class="mt-1 text-xs text-amber-700 dark:text-amber-500"
-                >
-                  Changed since review
-                </p>
+                  <p
+                    v-if="review.reviewState(entry) === 'changed'"
+                    class="mt-1 text-xs text-amber-700 dark:text-amber-500"
+                  >
+                    Changed since review
+                  </p>
+                </div>
               </div>
             </NeTableCell>
             <NeTableCell data-label="Italian">

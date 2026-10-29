@@ -217,17 +217,20 @@ function buildIndex(): SearchItem[] {
         hash: `#icon-${entry.id}`,
         title: entry.meaning,
         aliases: [entry.icon],
+        // the products tell apart entries with the same meaning in different products
         context: [
           iconography.title,
           'Meanings',
-          ICON_CATEGORIES.find((category) => category.id === entry.category)!.title
+          ICON_CATEGORIES.find((category) => category.id === entry.category)!.title,
+          ...(entry.products ? [entry.products.map((product) => PRODUCT_LABELS[product]).join(', ')] : [])
         ],
+        // the avoided icons are labeled, so a snippet that shows them does not
+        // read as if the entry used them
         text: [
           entry.use,
           entry.notFor ?? '',
           entry.notes ?? '',
-          ...(entry.avoid ?? []),
-          ...(entry.products ?? []).map((product) => PRODUCT_LABELS[product])
+          entry.avoid ? `Don't use: ${entry.avoid.join(', ')}.` : ''
         ].join(' '),
         rank: 2
       })

@@ -239,7 +239,7 @@ const PACKAGES = ICON_PACKAGES.map(({ name, version }) => `"${name}": "${version
       v-model="textFilter"
       is-search
       placeholder="Filter icons"
-      clear-search-label="Clear"
+      clear-search-label="Clear search"
       class="mb-6 max-w-48 sm:max-w-sm"
     />
     <NeEmptyState
@@ -273,27 +273,30 @@ const PACKAGES = ICON_PACKAGES.map(({ name, version }) => `"${name}": "${version
             ]"
           >
             <NeTableCell data-label="Meaning">
-              <div class="flex items-center gap-1">
-                <span class="font-medium">{{ entry.meaning }}</span>
-                <NeButton
-                  kind="tertiary"
-                  size="xs"
-                  :title="copiedId === entry.id ? 'Link copied' : 'Copy link'"
-                  @click="copyLink(entry.id, `icon-${entry.id}`)"
-                >
-                  <FontAwesomeIcon
-                    :icon="copiedId === entry.id ? faCheck : faLink"
-                    class="size-3"
-                    aria-hidden="true"
-                  />
-                  <span class="sr-only">
-                    {{ copiedId === entry.id ? 'Link copied' : `Copy link to ${entry.meaning}` }}
-                  </span>
-                </NeButton>
+              <!-- one element: in the card layout each child of a cell takes a grid column -->
+              <div>
+                <div class="flex items-center gap-1">
+                  <span class="font-medium">{{ entry.meaning }}</span>
+                  <NeButton
+                    kind="tertiary"
+                    size="xs"
+                    :title="copiedId === entry.id ? 'Link copied' : 'Copy link'"
+                    @click="copyLink(entry.id, `icon-${entry.id}`)"
+                  >
+                    <FontAwesomeIcon
+                      :icon="copiedId === entry.id ? faCheck : faLink"
+                      class="size-3"
+                      aria-hidden="true"
+                    />
+                    <span class="sr-only">
+                      {{ copiedId === entry.id ? 'Link copied' : `Copy link to ${entry.meaning}` }}
+                    </span>
+                  </NeButton>
+                </div>
+                <p v-if="entry.products" class="mb-0 text-xs text-gray-500 dark:text-gray-400">
+                  {{ productsText(entry) }}
+                </p>
               </div>
-              <p v-if="entry.products" class="mb-0 text-xs text-gray-500 dark:text-gray-400">
-                {{ productsText(entry) }}
-              </p>
             </NeTableCell>
             <NeTableCell data-label="Icon">
               <div class="flex items-center gap-3">

@@ -81,10 +81,10 @@ const label = (value: ColorValue) => value.ref ?? value.hex
       v-if="!groups.length"
       :icon="faMagnifyingGlass"
       title="No tokens found"
-      description="Try changing your search filters."
+      description="Try different or fewer words."
       class="mt-6 bg-white dark:bg-gray-950"
     >
-      <NeButton kind="tertiary" size="lg" @click="textFilter = ''">Reset filters</NeButton>
+      <NeButton kind="tertiary" size="lg" @click="textFilter = ''">Clear filter</NeButton>
     </NeEmptyState>
 
     <template v-for="group in groups" :key="group.name">

@@ -76,8 +76,9 @@
   code {
     @apply rounded bg-gray-100 px-1 py-0.5 text-[0.8125rem] dark:bg-gray-800;
   }
+  /* more space around tables than between paragraphs, so they stand apart */
   table {
-    @apply w-full border-collapse overflow-hidden rounded-md text-left;
+    @apply my-6 w-full border-collapse overflow-hidden rounded-md text-left;
   }
   th {
     @apply border-b border-gray-300 bg-gray-100 px-2 py-2 font-medium text-gray-900 sm:px-3 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-50;
