@@ -1,4 +1,4 @@
-# Nethesis UX glossary: single source of truth.
+# Nethesis Design System glossary: single source of truth.
 #
 # Edit this file through pull requests only. `npm run build:data` generates
 # glossary/it.tbx (read by Weblate) and the data used by the web page.

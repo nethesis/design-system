@@ -8,7 +8,7 @@
 //   - src/generated/icon-svgs.json  the icons it shows, so the page does not
 //                                   load whole icon packs
 //
-// guidelines.md is compiled by scripts/vite-plugin-guidelines.mjs.
+// content/*.md is compiled by scripts/vite-plugin-markdown.mjs.
 //
 // With --check, nothing is written: the script fails if glossary/it.tbx is
 // not up to date with glossary.yaml (used by CI).
@@ -22,69 +22,17 @@ import { fas as nsSolid } from '@nethesis/nethesis-solid-svg-icons'
 import { fal as nsLight } from '@nethesis/nethesis-light-svg-icons'
 import { fab as nsBrands } from '@nethesis/nethesis-brands-svg-icons'
 import { slug } from './slug.mjs'
+import { validateGlossary, validateIcons } from './validate-data.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const checkOnly = process.argv.includes('--check')
 
-const PRODUCTS = ['all', 'ns8', 'nethsecurity', 'nethvoice', 'nethservice', 'neth360', 'my']
-const FIELDS = ['id', 'en', 'it', 'untranslatable', 'definition', 'products', 'avoid', 'notes']
 const TARGET_LANGUAGES = ['it']
 
 const xml = (text) =>
   text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
-// validation
-
-const entries = parse(readFileSync(join(root, 'glossary.yaml'), 'utf8'))
-const errors = []
-
-if (!Array.isArray(entries)) {
-  console.error('glossary.yaml must be a list of entries')
-  process.exit(1)
-}
-
-const ids = new Set()
-const enTerms = new Map()
-
-for (const [index, entry] of entries.entries()) {
-  const where = `entry ${index + 1} (${entry.id ?? 'no id'})`
-
-  if (!entry.id || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(entry.id)) {
-    errors.push(`${where}: id must be a lowercase slug`)
-  } else if (ids.has(entry.id)) {
-    errors.push(`${where}: duplicate id`)
-  }
-  ids.add(entry.id)
-
-  if (!entry.en) errors.push(`${where}: missing en`)
-  if (!entry.definition) errors.push(`${where}: missing definition`)
-  if (entry.untranslatable && entry.it) {
-    errors.push(`${where}: an untranslatable entry cannot have an it translation`)
-  }
-  if (!entry.untranslatable && !entry.it) errors.push(`${where}: missing it`)
-  for (const field of Object.keys(entry)) {
-    if (!FIELDS.includes(field)) errors.push(`${where}: unknown field "${field}"`)
-  }
-  if (!Array.isArray(entry.products) || entry.products.length === 0) {
-    errors.push(`${where}: products must be a non-empty list`)
-  } else {
-    for (const product of entry.products) {
-      if (!PRODUCTS.includes(product)) errors.push(`${where}: unknown product "${product}"`)
-    }
-  }
-
-  const key = entry.en?.toLowerCase()
-  if (key && enTerms.has(key)) errors.push(`${where}: "${entry.en}" is already defined`)
-  enTerms.set(key, entry.id)
-
-  for (const lang of ['en', 'it']) {
-    for (const word of entry.avoid?.[lang] ?? []) {
-      if (word === entry[lang]) errors.push(`${where}: "${word}" is both preferred and avoided`)
-    }
-  }
-}
-
-// icon dictionary: every icon must exist in its package
+// validation (scripts/validate-data.mjs)
 
 const ICON_PACKS = {
   'fa-solid': fasFree,
@@ -92,20 +40,7 @@ const ICON_PACKS = {
   'ns-light': nsLight,
   'ns-brands': nsBrands
 }
-const ICON_CATEGORIES = ['actions', 'navigation', 'interface', 'status', 'sidebar', 'objects', 'brands']
-const ICON_FIELDS = [
-  'id',
-  'meaning',
-  'icon',
-  'pack',
-  'category',
-  'use',
-  'notFor',
-  'avoid',
-  'glossary',
-  'products',
-  'notes'
-]
+// the names of the icons of each pack, aliases included
 const iconNames = Object.fromEntries(
   Object.entries(ICON_PACKS).map(([pack, icons]) => [
     pack,
@@ -113,60 +48,22 @@ const iconNames = Object.fromEntries(
   ])
 )
 
+const entries = parse(readFileSync(join(root, 'glossary.yaml'), 'utf8'))
 const icons = parse(readFileSync(join(root, 'icons.yaml'), 'utf8'))
-const iconIds = new Set()
-
-if (!Array.isArray(icons)) errors.push('icons.yaml must be a list of entries')
-
-for (const [index, entry] of (Array.isArray(icons) ? icons : []).entries()) {
-  const where = `icons.yaml entry ${index + 1} (${entry.id ?? 'no id'})`
-
-  if (!entry.id || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(entry.id)) {
-    errors.push(`${where}: id must be a lowercase slug`)
-  } else if (iconIds.has(entry.id)) {
-    errors.push(`${where}: duplicate id`)
-  }
-  iconIds.add(entry.id)
-
-  for (const field of Object.keys(entry)) {
-    if (!ICON_FIELDS.includes(field)) errors.push(`${where}: unknown field "${field}"`)
-  }
-  for (const field of ['meaning', 'icon', 'use']) {
-    if (!entry[field]) errors.push(`${where}: missing ${field}`)
-  }
-  if (!ICON_CATEGORIES.includes(entry.category)) {
-    errors.push(`${where}: category must be one of ${ICON_CATEGORIES.join(', ')}`)
-  }
-
-  entry.pack ??= 'fa-solid'
-  if (!['fa-solid', 'ns-solid', 'ns-brands'].includes(entry.pack)) {
-    errors.push(`${where}: pack must be fa-solid, ns-solid or ns-brands`)
-  } else if (!iconNames[entry.pack].has(entry.icon)) {
-    errors.push(`${where}: "${entry.icon}" is not in ${entry.pack}`)
-  }
-  if ((entry.category === 'brands') !== (entry.pack === 'ns-brands')) {
-    errors.push(`${where}: brand icons, and only them, come from ns-brands`)
-  }
-  if (entry.category === 'sidebar' && !iconNames['ns-light'].has(entry.icon)) {
-    errors.push(`${where}: sidebar icons need a Light version, but "${entry.icon}" is not in ns-light`)
-  }
-
-  for (const icon of entry.avoid ?? []) {
-    if (!iconNames['fa-solid'].has(icon)) errors.push(`${where}: avoided "${icon}" is not in fa-solid`)
-    if (icon === entry.icon) errors.push(`${where}: "${icon}" is both used and avoided`)
-  }
-  for (const term of entry.glossary ?? []) {
-    if (!ids.has(term)) errors.push(`${where}: unknown glossary term "${term}"`)
-  }
-  for (const product of entry.products ?? []) {
-    if (!PRODUCTS.includes(product)) errors.push(`${where}: unknown product "${product}"`)
-  }
-}
+const errors = [
+  ...validateGlossary(entries),
+  ...validateIcons(icons, {
+    glossaryIds: new Set(Array.isArray(entries) ? entries.map((entry) => entry?.id) : []),
+    iconNames
+  })
+]
 
 if (errors.length) {
   console.error(errors.join('\n'))
   process.exit(1)
 }
+
+for (const entry of icons) entry.pack ??= 'fa-solid'
 
 // TBX for Weblate: https://docs.weblate.org/en/latest/formats/tbx.html
 
@@ -228,7 +125,7 @@ function tbx(lang) {
 <martifHeader>
 <fileDesc>
 <sourceDesc>
-<p>Nethesis UX glossary</p>
+<p>Nethesis Design System glossary</p>
 </sourceDesc>
 </fileDesc>
 </martifHeader>

@@ -26,7 +26,7 @@ and the glossary apply to it.
 | `icons.yaml` | The icon dictionary: which icon to use for each meaning, shown on the Iconography page. The comment at the top describes the fields |
 | `content/*.md` | The text pages (introduction, writing guidelines): plain markdown, no HTML or images. Tables with a "Do \| Don't" header are shown with check and cross marks. Link other pages with `?page=<id>`, for example `[glossary](?page=glossary)` |
 | `glossary/it.tbx` | Italian glossary for Weblate, generated from `glossary.yaml` (do not edit) |
-| `scripts/build-data.mjs` | Validates `glossary.yaml` and `icons.yaml` (every icon must exist in its package) and generates the TBX files and the page data |
+| `scripts/build-data.mjs` | Validates `glossary.yaml` and `icons.yaml` with `scripts/validate-data.mjs` (every icon must exist in its package; tests in `validate-data.test.mjs`) and generates the TBX files and the page data |
 | `scripts/vite-plugin-markdown.mjs` | Compiles each `content/*.md` into a Vue component, rejecting raw HTML and unsafe links, and gives the search the text of each section (tests in `vite-plugin-markdown.test.mjs`) |
 | `scripts/vite-plugin-glossary-watch.mjs` | Dev server only: reruns `build-data.mjs` when `glossary.yaml` or `icons.yaml` is saved |
 | `src/pages.ts` | The pages of the site and their sidebar groups |
@@ -36,6 +36,7 @@ and the glossary apply to it.
 | `src/foundations.ts` | Values of the foundations pages (typography, spacing and border, elevation and shadow), copied from the NDS Figma file: update them when Figma changes |
 | `scripts/vite-plugin-sources.ts` | Publishes the content as plain files for coding agents: see "Files for coding agents" below |
 | `src/` | The web site (Vue, `@nethesis/vue-components`), published on GitHub Pages |
+| `figma-fixes.md` | Changes to make in the NDS Figma file so that it agrees with this guide |
 
 ## Files for coding agents
 

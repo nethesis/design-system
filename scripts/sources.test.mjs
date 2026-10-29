@@ -10,7 +10,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { slug } from './slug.mjs'
 
 // the published files read the data generated from glossary.yaml and icons.yaml
@@ -69,6 +69,12 @@ for (const [id, { view, expressions = [] }] of Object.entries(ANCHORS)) {
     for (const expression of expressions) assert.ok(source.includes(expression), expression)
   })
 }
+
+test('every text page has a page of the site', () => {
+  const pages = read('src/pages.ts')
+  const contents = readdirSync(new URL('../content/', import.meta.url)).filter((name) => name.endsWith('.md'))
+  for (const name of contents) assert.ok(pages.includes(`id: '${name.slice(0, -3)}'`), name)
+})
 
 test('llms.txt lists only published files', () => {
   const links = [...files['llms.txt'].matchAll(/\]\(([^)]+)\)/g)].map(([, href]) => href)
