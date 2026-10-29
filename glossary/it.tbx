@@ -444,7 +444,7 @@
 </termEntry>
 <termEntry id="clear">
 <descrip>Empty a search field, a selection or a filter.</descrip>
-<descrip type="Usage note">&quot;Clear&quot; empties values; &quot;Reset&quot; brings them back to their defaults. For filters, use &quot;Clear selection&quot; (&quot;Azzera selezione&quot;) only inside a single dropdown filter that has nothing selected by default, and &quot;Reset&quot; in every other case: see the Table filters guidelines. The clear button of a search field is &quot;Clear search&quot; (&quot;Azzera ricerca&quot;).</descrip>
+<descrip type="Usage note">&quot;Clear&quot; empties values; &quot;Reset&quot; brings them back to their defaults. For filters, use &quot;Clear selection&quot; (&quot;Azzera selezione&quot;) only inside a single dropdown filter that has nothing selected by default, &quot;Clear filter&quot; (&quot;Azzera filtro&quot;) when the only filter of a table or a collection is a text filter, and &quot;Reset&quot; in every other case: see the Table filters guidelines. The clear button of a search field is &quot;Clear search&quot; (&quot;Azzera ricerca&quot;).</descrip>
 <langSet xml:lang="en">
 <tig>
 <term>Clear</term>

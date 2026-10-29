@@ -153,22 +153,26 @@ From the [*Table page* pattern](https://nethesis.github.io/vue-components/?path=
 
 From the [*Table page* pattern](https://nethesis.github.io/vue-components/?path=/story/patterns-table-page--standard) and My Nethesis. A table can have a text filter and some dropdown filters. A filter can have a default value: for example, a status filter that shows only the active users when the page opens.
 
-- **Reset** brings filters back to their default values. Use it in every case except the one below, even when all the defaults are empty.
-- **Clear** empties a selection. Use it only inside a single dropdown filter that has nothing selected by default: there, resetting means emptying, and "Clear" says it better.
+- **Reset** brings filters back to their default values. Use it in every case except the two below, even when all the defaults are empty.
+- **Clear** empties a selection or a text. Use it only inside a single dropdown filter that has nothing selected by default, and when the only filter of a table or a collection is a text filter: there, resetting means emptying, and "Clear" says it better.
 
 | Applies to | Label | Italian |
 | --- | --- | --- |
 | All the filters of a table, from the toolbar or the empty state | Reset filters | Reimposta filtri |
 | One dropdown filter that has a default selection | Reset selection | Reimposta selezione |
 | One dropdown filter that has nothing selected by default | Clear selection | Azzera selezione |
+| The only filter of a table or a collection, a text filter, from the empty state | Clear filter | Azzera filtro |
 | The clear button of the text filter (screen readers only) | Clear search | Azzera ricerca |
 
 The label of a dropdown filter names the data category, with a noun and the same term used in the table. Keep its options parallel in grammar and level of detail.
 
 | Do | Don't |
 | --- | --- |
-| Reset filters | Clear filters |
-| Reset selection, for a status filter with a default | Clear selection |
+| Reset filters (for a table with several filters) | Clear filters |
+| Reset selection (inside a dropdown filter with a default selection) | Clear selection |
+| Clear selection (inside a dropdown filter with nothing selected by default) | Reset selection |
+| Clear filter (for a table with only a text filter) | Reset filters |
+| Clear filter (for a collection with only a text filter) | Clear filters |
 | Company | Filter by company |
 | Status | Select status |
 
@@ -182,6 +186,7 @@ From the [*Empty state* pattern](https://nethesis.github.io/vue-components/?path
 | Nothing to show, nothing to create | No voicemail messages | You currently have no voicemail messages. | none |
 | Items will appear over time | No notifications yet | (Optional) | none |
 | Filters match nothing | No users found | Try changing your search filters. | Reset filters |
+| The only filter, a text filter, matches nothing | No users found | Try different or fewer words. | Clear filter |
 | Feature turned off | Threat Shield DNS is disabled | Say how to enable it, if users can. | The action that enables it, if any |
 | No permission | Restricted page | It seems that you don't have the necessary permissions to view this page. | Go to Dashboard |
 

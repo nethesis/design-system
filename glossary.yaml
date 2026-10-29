@@ -213,8 +213,9 @@
   notes: >-
     "Clear" empties values; "Reset" brings them back to their defaults. For filters, use "Clear
     selection" ("Azzera selezione") only inside a single dropdown filter that has nothing
-    selected by default, and "Reset" in every other case: see the Table filters guidelines. The
-    clear button of a search field is "Clear search" ("Azzera ricerca").
+    selected by default, "Clear filter" ("Azzera filtro") when the only filter of a table or a
+    collection is a text filter, and "Reset" in every other case: see the Table filters
+    guidelines. The clear button of a search field is "Clear search" ("Azzera ricerca").
 
 - id: reset
   en: Reset
