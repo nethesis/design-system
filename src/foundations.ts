@@ -54,6 +54,9 @@ export type TextStyle = {
   weight: 'Regular' | 'Medium'
 }
 
+// the widest a paragraph of running text should be: longer lines are hard to read
+export const LINE_LENGTH = { className: 'max-w-2xl', px: 672 }
+
 export const TEXT_STYLE_GROUPS: { title: string; styles: TextStyle[] }[] = [
   {
     title: 'Headings',

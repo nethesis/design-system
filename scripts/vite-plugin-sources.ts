@@ -34,6 +34,7 @@ import {
   FONT_WEIGHTS,
   ICON_PACKAGES,
   ICON_SIZES,
+  LINE_LENGTH,
   RADII,
   SHADOWS,
   SPACING,
@@ -130,6 +131,10 @@ function foundations() {
       typeface: TYPEFACE,
       weights: FONT_WEIGHTS,
       sizes: TEXT_SIZES,
+      lineLength: {
+        ...LINE_LENGTH,
+        note: 'The widest a paragraph of running text should be, such as the description of a page: longer lines are hard to read. Tables, forms and other content can be wider.'
+      },
       textStyles: TEXT_STYLE_GROUPS
     },
     iconography: {

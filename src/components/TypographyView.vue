@@ -4,7 +4,7 @@
 -->
 
 <script setup lang="ts">
-import { FONT_WEIGHTS, TEXT_SIZES, TEXT_STYLE_GROUPS } from '../foundations'
+import { FONT_WEIGHTS, LINE_LENGTH, TEXT_SIZES, TEXT_STYLE_GROUPS } from '../foundations'
 
 const SAMPLE = 'The quick brown fox jumps over the lazy dog'
 
@@ -88,6 +88,13 @@ const inlineStyle = (size: number, lineHeight: number) => ({
         </tbody>
       </table>
     </div>
+
+    <h2 id="line-length">Line length</h2>
+    <p>
+      Keep paragraphs of running text, such as the description of a page, at most
+      {{ LINE_LENGTH.px }} px wide with <code>{{ LINE_LENGTH.className }}</code>: longer lines are
+      hard to read. Tables, forms and other content can be wider.
+    </p>
 
     <h2 id="text-styles">Text styles</h2>
     <p>The text styles of Figma, with the Tailwind classes that reproduce them.</p>
