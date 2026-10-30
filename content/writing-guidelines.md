@@ -124,7 +124,7 @@ Icon buttons need a tooltip, and screen readers read the same text. Describe the
 
 ## Forms
 
-From the [*New password form* pattern](https://nethesis.github.io/vue-components/?path=/story/patterns-new-password-form--standard).
+From the [*New password form*](https://nethesis.github.io/vue-components/?path=/story/patterns-new-password-form--standard) and [*Create item drawer*](https://nethesis.github.io/vue-components/?path=/story/patterns-create-item-drawer--standard) patterns.
 
 - **Labels** are nouns that name the information or setting, not the way to enter it: `Username`, `Language`, `Admin password`. Use the same terms as the table columns and the detail views. A label can be a short instruction when a noun would be unclear, as in `Confirm new password`.
 - **Helper text** says why the information is needed, how it is used or which format is expected. Don't repeat the label, and show the requirements before an error happens. Keep it true both when the field is empty and when it is filled.
