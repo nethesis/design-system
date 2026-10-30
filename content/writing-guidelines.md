@@ -144,7 +144,7 @@ Validation messages:
 
 From the [*Table page* pattern](https://nethesis.github.io/vue-components/?path=/story/patterns-table-page--standard).
 
-- Title: the plural object (`Phonebook contacts`).
+- Title: the name of the page in the menu, so users recognize where they are. For a list, it is usually the plural object (`Users`).
 - Description: one sentence that says what the page shows or is for. For a list, a good pattern is `List of <objects>, including <main attributes>.`
 - Primary action: `Create <object>`, on the right of the title, or of the description when there is no title. On small screens it goes after the description. When there is no description, it goes on the right of the table toolbar, or above it on small screens. When there are no objects yet, it goes only in the empty state.
 - Text filter placeholder: `Filter <objects>`.
