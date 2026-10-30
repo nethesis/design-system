@@ -215,6 +215,13 @@ From the [*Delete item modal* pattern](https://nethesis.github.io/vue-components
 - Buttons: `Delete` (danger) and `Cancel`.
 - When deletion has consequences beyond the object itself, for example it destroys data, removes many objects or breaks something that depends on it, ask the user to type the name: `Type 'Alice Fox' to confirm`. Don't ask it for routine deletions.
 
+### Archive and destroy confirmation
+
+In products that archive objects before destroying them, such as My Nethesis (see [Archive](?page=glossary#term-archive) in the glossary):
+
+- Archive: title `Archive <object type>`. In the description, name the object, say what stops working and that it can be restored: `System Server01 will be archived. It will no longer receive updates, and you won't be able to request support for it. You can restore it later.` Buttons: `Archive` (primary) and `Cancel`. Archiving can be undone, so don't ask to type the name.
+- Destroy: as in Delete confirmation, with the title `Destroy <object type>` and a `Destroy` (danger) button. Say that it cannot be undone: `Customer Acme will be permanently destroyed, with its users and systems. This cannot be undone.` Ask to type the name when it destroys other objects too.
+
 ## Notifications
 
 ### Error messages
