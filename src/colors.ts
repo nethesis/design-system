@@ -3,7 +3,7 @@
 
 import colors from '../data/colors.json' with { type: 'json' }
 
-// Color tokens of the NDS Figma file, exported to data/colors.json by
+// Color tokens of the Nebula Figma file, exported to data/colors.json by
 // scripts/figma/export-colors.js and scripts/import-colors.mjs.
 
 export type ColorValue = { ref: string | null; hex: string }

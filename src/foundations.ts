@@ -2,7 +2,7 @@
 //  SPDX-License-Identifier: GPL-3.0-or-later
 
 // Values of the foundations pages, from the Foundation pages and the
-// variables of the NDS Figma file (read on 2026-10-26). Figma is the source:
+// variables of the Nebula Figma file (read on 2026-10-26). Figma is the source:
 // update these values when Figma changes.
 //
 // Tailwind class names are written in full, so that Tailwind generates them
@@ -213,7 +213,7 @@ export const ICON_PACKAGES = [
   }
 ] as const
 
-// sizes and their use, from the Iconography page of the NDS Figma file
+// sizes and their use, from the Iconography page of the Nebula Figma file
 export const ICON_SIZES = [
   { px: 12, className: 'size-3', use: 'Service icons, such as the check circle of a selection' },
   {

@@ -54,7 +54,7 @@ import {
   type IconEntry
 } from '../src/types.ts'
 
-export const SITE = 'https://nethesis.github.io/design-system/'
+export const SITE = 'https://nethesis.github.io/nebula-design-system/'
 const page = (id: string, anchor = '') => `${SITE}?page=${id}${anchor ? `#${anchor}` : ''}`
 const file = (path: string) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8')
 const glossaryTerms = (): GlossaryEntry[] => JSON.parse(file('src/generated/glossary.json'))
@@ -220,11 +220,11 @@ function icons() {
   }
 }
 
-const LLMS = `# Nethesis Design System
+const LLMS = `# Nebula Design System
 
 > Rules shared by the user interfaces of Nethesis products: writing guidelines, glossary and
 > visual foundations. The components are in @nethesis/vue-components
-> (Storybook: https://nethesis.github.io/vue-components/), the designs in the NDS Figma file.
+> (Storybook: https://nethesis.github.io/vue-components/), the designs in the Nebula Figma file.
 > NethServer 8 uses the Carbon Design System instead: only the writing guidelines and the
 > glossary apply to it.
 

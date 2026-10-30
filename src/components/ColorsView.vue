@@ -64,7 +64,7 @@ const label = (value: ColorValue) => value.ref ?? value.hex
       in Tailwind CSS.
     </p>
     <p class="text-xs text-gray-500 dark:text-gray-400">
-      Exported from the NDS Figma file on {{ EXPORTED_AT }}.
+      Exported from the Nebula Figma file on {{ EXPORTED_AT }}.
     </p>
 
     <div class="mt-6 mb-2">

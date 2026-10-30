@@ -1,12 +1,12 @@
-# Nethesis Design System
+# Nebula Design System
 
-The Nethesis Design System is made of three parts, to use together:
+The Nebula Design System is made of three parts, to use together:
 
 - **This site**: the rules shared by all products, whatever technology they are built with.
 - **[vue-components Storybook](https://nethesis.github.io/vue-components/)**: the Vue components
   and patterns of `@nethesis/vue-components`, with their props and live examples.
-- **[NDS Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS)**: the designs, open
-  to the members of the Nethesis Figma team.
+- **[Nebula Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS)**: the designs,
+  open to the members of the Nethesis Figma team.
 
 It applies to the user interfaces of NethSecurity, NethVoice and My Nethesis, and in part to
 [NethServer 8](#nethserver-8).
@@ -23,7 +23,7 @@ It applies to the user interfaces of NethSecurity, NethVoice and My Nethesis, an
 
 ## NethServer 8
 
-NethServer 8 uses the Carbon Design System, not the Nethesis one: only the
+NethServer 8 uses the Carbon Design System, not Nebula: only the
 [writing guidelines](?page=writing-guidelines) and the [glossary](?page=glossary) apply to it. The
 foundations and the vue-components library do not. For its components and visual style, see:
 

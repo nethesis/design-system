@@ -1,14 +1,14 @@
-# Nethesis Design System
+# Nebula Design System
 
-The Nethesis Design System is made of three parts, to use together:
+The Nebula Design System is made of three parts, to use together:
 
-- **This repository**, published at https://nethesis.github.io/design-system/: the rules shared by
-  all products, whatever technology they are built with. Writing guidelines, the glossary of terms
-  with their Italian translations and the visual foundations.
+- **This repository**, published at https://nethesis.github.io/nebula-design-system/: the rules
+  shared by all products, whatever technology they are built with. Writing guidelines, the
+  glossary of terms with their Italian translations and the visual foundations.
 - **[vue-components](https://github.com/nethesis/vue-components)**: the Vue components and
   patterns, with their props and live examples in the
   [Storybook](https://nethesis.github.io/vue-components/).
-- **[NDS Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS)**: the designs.
+- **[Nebula Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS)**: the designs.
 
 Unlike the other products, NethServer 8 uses the Carbon Design System: only the writing guidelines
 and the glossary apply to it.
@@ -31,12 +31,12 @@ and the glossary apply to it.
 | `scripts/vite-plugin-glossary-watch.mjs` | Dev server only: reruns `build-data.mjs` when `glossary.yaml` or `icons.yaml` is saved |
 | `src/pages.ts` | The pages of the site and their sidebar groups |
 | `src/search.ts` | The search in the top bar: pages, sections, glossary terms, color tokens, text styles, icon meanings and custom icons. Loaded the first time the search gets the focus. Headings of the Vue pages are found only when they have a fixed `id` and text |
-| `data/colors.json` | Color tokens exported from the NDS Figma file (do not edit): see "Colors" below |
+| `data/colors.json` | Color tokens exported from the Nebula Figma file (do not edit): see "Colors" below |
 | `scripts/figma/export-colors.js`, `scripts/import-colors.mjs` | Export the color variables from Figma, then validate them and write `data/colors.json` |
-| `src/foundations.ts` | Values of the foundations pages (typography, spacing and border, elevation and shadow), copied from the NDS Figma file: update them when Figma changes |
+| `src/foundations.ts` | Values of the foundations pages (typography, spacing and border, elevation and shadow), copied from the Nebula Figma file: update them when Figma changes |
 | `scripts/vite-plugin-sources.ts` | Publishes the content as plain files for coding agents: see "Files for coding agents" below |
 | `src/` | The web site (Vue, `@nethesis/vue-components`), published on GitHub Pages |
-| `figma-fixes.md` | Changes to make in the NDS Figma file so that it agrees with this guide |
+| `figma-fixes.md` | Changes to make in the Nebula Figma file so that it agrees with this guide |
 
 ## Files for coding agents
 
@@ -46,13 +46,13 @@ the pages:
 
 | File | Content |
 | --- | --- |
-| [`llms.txt`](https://nethesis.github.io/design-system/llms.txt) | Index of the files below, and of the `components.json` of the vue-components Storybook |
-| [`writing-guidelines.md`](https://nethesis.github.io/design-system/writing-guidelines.md) | The writing guidelines |
-| [`glossary.json`](https://nethesis.github.io/design-system/glossary.json) | The glossary |
-| [`icons.json`](https://nethesis.github.io/design-system/icons.json) | Which icon to use for each meaning, the icons to avoid, and the custom icons with no meaning yet |
-| [`colors.json`](https://nethesis.github.io/design-system/colors.json) | The color tokens, with their Tailwind CSS classes |
-| [`foundations.json`](https://nethesis.github.io/design-system/foundations.json) | Typography, iconography, spacing, border, focus ring, elevation and shadow |
-| [`introduction.md`](https://nethesis.github.io/design-system/introduction.md) | The introduction |
+| [`llms.txt`](https://nethesis.github.io/nebula-design-system/llms.txt) | Index of the files below, and of the `components.json` of the vue-components Storybook |
+| [`writing-guidelines.md`](https://nethesis.github.io/nebula-design-system/writing-guidelines.md) | The writing guidelines |
+| [`glossary.json`](https://nethesis.github.io/nebula-design-system/glossary.json) | The glossary |
+| [`icons.json`](https://nethesis.github.io/nebula-design-system/icons.json) | Which icon to use for each meaning, the icons to avoid, and the custom icons with no meaning yet |
+| [`colors.json`](https://nethesis.github.io/nebula-design-system/colors.json) | The color tokens, with their Tailwind CSS classes |
+| [`foundations.json`](https://nethesis.github.io/nebula-design-system/foundations.json) | Typography, iconography, spacing, border, focus ring, elevation and shadow |
+| [`introduction.md`](https://nethesis.github.io/nebula-design-system/introduction.md) | The introduction |
 
 Each file has a `source`, the page of the site it comes from, and each glossary term, icon meaning and color token has a `link` to its anchor in the site. In the markdown files, the links to other pages point to the matching file, such as `glossary.json`. `index.html` links `llms.txt` too, for tools that fetch the site without running it. The dev server serves the files as well, for example http://localhost:5179/llms.txt; restart it after changing `scripts/vite-plugin-sources.ts`.
 
@@ -73,7 +73,7 @@ once it has been agreed. Translations listed under `avoid.it` become forbidden t
 The Colors page reads `data/colors.json`. To update it after a change in Figma:
 
 1. Run the code of `scripts/figma/export-colors.js` with the `use_figma` tool of the Figma MCP server,
-   on the NDS file, and save the returned JSON to a file.
+   on the Nebula Figma file, and save the returned JSON to a file.
 2. Run `npm run import:colors -- <file>`: it validates the export and rewrites `data/colors.json`.
 3. Review the diff and commit it.
 

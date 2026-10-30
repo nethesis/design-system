@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Nethesis S.r.l.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-// Figma plugin code that exports the color variables of the NDS Figma file
+// Figma plugin code that exports the color variables of the Nebula Figma file
 // (collections "Primitive" and "Semantic colors"), read only.
 //
 // It is not run by Node: pass it to the use_figma tool of the Figma MCP

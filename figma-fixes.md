@@ -1,7 +1,7 @@
 # Figma fixes
 
-Changes to make in the [NDS Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS) so
-that it agrees with this guide. Remove an item once it is done.
+Changes to make in the [Nebula Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS)
+so that it agrees with this guide. Remove an item once it is done.
 
 ## Text to correct
 
@@ -77,4 +77,4 @@ that it agrees with this guide. Remove an item once it is done.
 
 - [ ] Replace the writing rules in Figma (Writing guidelines page and the writing sections of the
   component pages) with a short link to the corresponding section of
-  https://nethesis.github.io/design-system/, so there is a single source.
+  https://nethesis.github.io/nebula-design-system/, so there is a single source.

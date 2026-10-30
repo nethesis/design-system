@@ -367,7 +367,7 @@ const PACKAGES = ICON_PACKAGES.map(({ name, version }) => `"${name}": "${version
         target="_blank"
         rel="noopener noreferrer"
         class="text-primary-700 underline dark:text-primary-500"
-        >Iconography page of the NDS Figma file</a
+        >Iconography page of the Nebula Figma file</a
       >.
     </p>
     <template v-for="group in CUSTOM_ICONS" :key="group.id">

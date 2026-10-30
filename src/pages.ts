@@ -43,7 +43,7 @@ export const PAGE_GROUPS: PageGroup[] = [
     pages: [
       {
         id: 'introduction',
-        title: 'Nethesis Design System',
+        title: 'Nebula Design System',
         navLabel: 'Introduction',
         description: 'Rules, components and designs for the user interfaces of Nethesis products.',
         icon: faHouse,
@@ -127,7 +127,7 @@ export const RESOURCES = [
   },
   {
     label: 'Figma',
-    title: 'NDS Figma file',
+    title: 'Nebula Figma file',
     href: 'https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS'
   }
 ]

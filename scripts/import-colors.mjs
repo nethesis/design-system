@@ -56,7 +56,7 @@ if (errors.length) {
 
 const line = (value) => `  ${JSON.stringify(value)}`
 const json = `{
-"source": "NDS Figma file ZRZzzlqb9GfB9Xdz6iGufh, variable collections Primitive and Semantic colors",
+"source": "Nebula Figma file ZRZzzlqb9GfB9Xdz6iGufh, variable collections Primitive and Semantic colors",
 "exportedAt": "${new Date().toISOString().slice(0, 10)}",
 "primitives": [
 ${primitives.map(line).join(',\n')}

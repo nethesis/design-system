@@ -125,7 +125,7 @@ function tbx(lang) {
 <martifHeader>
 <fileDesc>
 <sourceDesc>
-<p>Nethesis Design System glossary</p>
+<p>Nebula Design System glossary</p>
 </sourceDesc>
 </fileDesc>
 </martifHeader>

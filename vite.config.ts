@@ -6,7 +6,7 @@ import glossaryWatch from './scripts/vite-plugin-glossary-watch.mjs'
 import publishSources from './scripts/vite-plugin-sources.ts'
 
 export default defineConfig({
-  // relative base: the site is served from https://<org>.github.io/design-system/
+  // relative base: the site is served from https://<org>.github.io/nebula-design-system/
   base: './',
   plugins: [
     // content/*.md become Vue components, see scripts/vite-plugin-markdown.mjs

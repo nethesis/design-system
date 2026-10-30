@@ -38,7 +38,7 @@ if (
 watch(
   currentPage,
   (page) => {
-    document.title = page === HOME_PAGE ? page.title : `${page.title} · Nethesis Design System`
+    document.title = page === HOME_PAGE ? page.title : `${page.title} · Nebula Design System`
   },
   { immediate: true }
 )
