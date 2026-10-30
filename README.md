@@ -8,7 +8,7 @@ The Nebula Design System is made of three parts, to use together:
 - **[vue-components](https://github.com/nethesis/vue-components)**: the Vue components and
   patterns, with their props and live examples in the
   [Storybook](https://nethesis.github.io/vue-components/).
-- **[Nebula Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS)**: the designs.
+- **[Nebula Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/Nebula-Design-System)**: the designs.
 
 Unlike the other products, NethServer 8 uses the Carbon Design System: only the writing guidelines
 and the glossary apply to it.

@@ -1,6 +1,6 @@
 # Figma fixes
 
-Changes to make in the [Nebula Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS)
+Changes to make in the [Nebula Figma file](https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/Nebula-Design-System)
 so that it agrees with this guide. Remove an item once it is done.
 
 ## Text to correct

@@ -128,7 +128,7 @@ export const RESOURCES = [
   {
     label: 'Figma',
     title: 'Nebula Figma file',
-    href: 'https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS'
+    href: 'https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/Nebula-Design-System'
   }
 ]
 

@@ -363,7 +363,7 @@ const PACKAGES = ICON_PACKAGES.map(({ name, version }) => `"${name}": "${version
     <p>
       The icons of the Nethesis packages. Flags and application icons are only in the
       <a
-        href="https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/NDS?node-id=25-8058"
+        href="https://www.figma.com/design/ZRZzzlqb9GfB9Xdz6iGufh/Nebula-Design-System?node-id=25-8058"
         target="_blank"
         rel="noopener noreferrer"
         class="text-primary-700 underline dark:text-primary-500"
